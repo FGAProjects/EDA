@@ -77,10 +77,10 @@ int main () {
 
 	if(aprovadoFinal == 1) {
 		
-		printf("Menos da metade da turma foi reprovada \n");
+		printf("Mais da metade da turma foi aprovada \n");
 		
 	} else {
 		
-		printf("Mais da metade da turma foi aprovada \n");
+		printf("Mais da metade da turma foi reprovada \n");
 	}
 }
