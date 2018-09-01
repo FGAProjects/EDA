@@ -17,10 +17,9 @@ void hanoi(int n, char ori, char dest, char aux){
         hanoi(n-1, aux, dest, ori);
         
     }
-    
 }
 
-main(){
+int main(){
     
     int n;
     
