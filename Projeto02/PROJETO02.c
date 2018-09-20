@@ -43,21 +43,25 @@ int salvaArquivos(int *array, int testeOuTreino, int gramaOuAsfalto){
     int tipo;
 
     if(testeOuTreino == 0 && gramaOuAsfalto == 0){
+        
         strcpy(nome,"ArquivosTeste/teste_grass.txt");
         strcpy(diretorio,"DataSet/grass/grass_");
         tipo = 0;
     }
     else if (testeOuTreino == 0 && gramaOuAsfalto == 1){
+        
         strcpy(nome,"ArquivosTeste/teste_asphalt.txt");
         strcpy(diretorio,"DataSet/asphalt/asphalt_");
         tipo = 1;
     }
     else if (testeOuTreino == 1 && gramaOuAsfalto == 0){
+        
         strcpy(nome,"ArquivosTeste/treino_grass.txt");
         strcpy(diretorio,"DataSet/grass/grass_");
         tipo = 2;
     }
     else if (testeOuTreino == 1 && gramaOuAsfalto == 1){
+        
         strcpy(nome,"ArquivosTeste/treino_asphalt.txt");
         strcpy(diretorio,"DataSet/asphalt/asphalt_");
         tipo = 3;
@@ -112,14 +116,16 @@ void nomeArquivo(int codigoArquivo, char* nome){
     }
 }
 
-void pegaLinhaNome(int codigoArquivo, int linha, char* filename, char* conteudoLinha){
-    
-    nomeArquivo(codigoArquivo, filename);
+void calculaLinhasColunas(int *qtde_linhas_asfalto,int *qtde_colunas_asfalto,
+						  int *qtde_linhas_grama,int *qtde_colunas_grama,
+						  char *arquivo_asfalto, char *arquivo_grama) {
 
-    FILE *file;
-    int qtde_linhas_asfalto = 0;
-	int qtde_colunas_asfalto = 1;
-    
+	FILE *file;
+
+    char caractere;
+	
+	file = fopen(arquivo_asfalto, "r");
+
     if(file==NULL){
 	    
 	    printf("Falha!\n");
@@ -136,6 +142,57 @@ void pegaLinhaNome(int codigoArquivo, int linha, char* filename, char* conteudoL
 			}
 		}
 	}
+
+	file = fopen(arquivo_grama, "r");
+
+    if(file==NULL){
+	    
+	    printf("Falha!\n");
+	} else {
+
+		while((caractere = fgetc(file)) != EOF) {
+			
+			if(caractere == '\n') {
+				
+				qtde_linhas_grama ++;
+			} else if(qtde_linhas_grama == 0 && caractere == ';'){
+
+				qtde_colunas_grama ++;
+			}
+		}
+	}	
+}
+
+/*void pegaLinhaNome(int codigoArquivo, int linha, char* filename, char* conteudoLinha){
+    
+    nomeArquivo(codigoArquivo, filename);
+
+    FILE *file;
+
+    char caractere;
+    int qtde_linhas_asfalto = 0;
+	int qtde_colunas_asfalto = 1;
+	
+	file = fopen(filename, "r");
+
+    if(file==NULL){
+	    
+	    printf("Falha!\n");
+	} else {
+
+		while((caractere = fgetc(file)) != EOF) {
+			
+			if(caractere == '\n') {
+				
+				qtde_linhas_asfalto ++;
+			} else if(qtde_linhas_asfalto == 0 && caractere == ';'){
+
+				qtde_colunas_asfalto ++;
+			}
+		}
+	}
+
+	fclose(file);
     /*FILE *fptr;
 
     fptr = fopen(filename, "r");
@@ -155,8 +212,8 @@ void pegaLinhaNome(int codigoArquivo, int linha, char* filename, char* conteudoL
     strtok(buffer, "\n");
     printf("este eh o buffer %s\n", buffer);
     strcpy(conteudoLinha, buffer);
-    fclose(fptr);*/
-}
+    fclose(fptr);
+}*/
 
 int* calculaDimensao(char* filename){
     int *dimensaoMatriz = (int*) calloc (2,sizeof(int));
@@ -302,7 +359,16 @@ int main () {
     sleep(1);
     int listaArquivosTreinoAsfalto = salvaArquivos(asfaltoTreino, 1, 1);
 
-    	file = fopen(arquivo_asfalto, "r");
+    calculaLinhasColunas(&qtde_linhas_asfalto,&qtde_colunas_asfalto,&qtde_linhas_grama,&qtde_colunas_grama,
+						 arquivo_asfalto,arquivo_grama);
+    printf("%d\n", qtde_linhas_grama);
+
+    /*
+		FAZER UM MÉTODO PRA CALCULAR A QUANTIDADE DE LINHAS E COLUNAS. DE PREFERENCIA QUE 
+		RETORNE O VALOR POR REFENCIA
+    */
+
+    	//file = fopen(arquivo_asfalto, "r");
 
   	/*if(file==NULL){
 	    
