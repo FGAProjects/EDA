@@ -120,41 +120,13 @@ void pegaLinhaNome(int codigoArquivo, int linha, char* filename, char* conteudoL
     
     nomeArquivo(codigoArquivo, filename);
 
-    FILE *file;
-
-    char caractere;
-    int qtde_linhas_asfalto = 0;
-	int qtde_colunas_asfalto = 1;
-	
-	file = fopen(filename, "r");
-
-    if(file==NULL){
-	    
-	    printf("Falha!\n");
-	} else {
-
-		while((caractere = fgetc(file)) != EOF) {
-			
-			if(caractere == '\n') {
-				
-				qtde_linhas_asfalto ++;
-			} else if(qtde_linhas_asfalto == 0 && caractere == ';'){
-
-				qtde_colunas_asfalto ++;
-			}
-		}
-	}
-
-	fclose(file);
-}
-    /*FILE *fptr;
+    FILE *fptr;
 
     fptr = fopen(filename, "r");
     rewind(fptr);
     int count = 0;
     char buffer[256];
-    while (fgets(buffer, sizeof buffer, fptr))
-    {
+    while (fgets(buffer, sizeof buffer, fptr)) {
         if (count == linha){
             break;
         }
@@ -166,8 +138,8 @@ void pegaLinhaNome(int codigoArquivo, int linha, char* filename, char* conteudoL
     strtok(buffer, "\n");
     printf("este eh o buffer %s\n", buffer);
     strcpy(conteudoLinha, buffer);
-    fclose(fptr);
-}*/
+    fclose(fptr);    
+}
 
 int* calculaDimensao(char* filename){
     int *dimensaoMatriz = (int*) calloc (2,sizeof(int));
@@ -265,6 +237,22 @@ void armazenaArquivoMatriz(char* filename){
 	        }
         }
     }
+
+    for(int i=0; i<qtde_linhas_asfalto-1; i++){
+        for(int j=0; j<qtde_colunas_asfalto-1; j++){
+     	    printf("%d",matrizImagem[i][j]);
+	    }
+	        printf("\n");
+    }
+
+    sleep(1);
+	printf("Preparando imagem pro ILPB...");
+	sleep(1);
+    calculaILBP(matrizImagem, qtde_linhas_asfalto, qtde_colunas_asfalto);
+
+    printf("\n");
+
+    fclose(file);
 
     /*
     dimensaoMatriz = calculaDimensao(filename);
