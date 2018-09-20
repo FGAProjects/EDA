@@ -116,54 +116,7 @@ void nomeArquivo(int codigoArquivo, char* nome){
     }
 }
 
-void calculaLinhasColunas(int *qtde_linhas_asfalto,int *qtde_colunas_asfalto,
-						  int *qtde_linhas_grama,int *qtde_colunas_grama,
-						  char *arquivo_asfalto, char *arquivo_grama) {
-
-	FILE *file;
-
-    char caractere;
-	
-	file = fopen(arquivo_asfalto, "r");
-
-    if(file==NULL){
-	    
-	    printf("Falha!\n");
-	} else {
-
-		while((caractere = fgetc(file)) != EOF) {
-			
-			if(caractere == '\n') {
-				
-				qtde_linhas_asfalto ++;
-			} else if(qtde_linhas_asfalto == 0 && caractere == ';'){
-
-				qtde_colunas_asfalto ++;
-			}
-		}
-	}
-
-	file = fopen(arquivo_grama, "r");
-
-    if(file==NULL){
-	    
-	    printf("Falha!\n");
-	} else {
-
-		while((caractere = fgetc(file)) != EOF) {
-			
-			if(caractere == '\n') {
-				
-				qtde_linhas_grama ++;
-			} else if(qtde_linhas_grama == 0 && caractere == ';'){
-
-				qtde_colunas_grama ++;
-			}
-		}
-	}	
-}
-
-/*void pegaLinhaNome(int codigoArquivo, int linha, char* filename, char* conteudoLinha){
+void pegaLinhaNome(int codigoArquivo, int linha, char* filename, char* conteudoLinha){
     
     nomeArquivo(codigoArquivo, filename);
 
@@ -193,6 +146,7 @@ void calculaLinhasColunas(int *qtde_linhas_asfalto,int *qtde_colunas_asfalto,
 	}
 
 	fclose(file);
+}
     /*FILE *fptr;
 
     fptr = fopen(filename, "r");
@@ -253,13 +207,6 @@ void calculaILBP(int *mat[], int lin, int col){
     int i = 0;
     int j = 0;
 
-    // for (i = 0 ;i<lin;i++){
-    //     for(j=0;col;j++){
-         // printf("%d\t", (*mat + 0)+0 );
-    //     }
-    //     printf("\n");
-    // }
-
    int* ilbp = (int *)calloc(pow(2, 9), sizeof(int));
    FILE* ilbp_file;
    fopen("ilpb.txt", "w");
@@ -267,11 +214,62 @@ void calculaILBP(int *mat[], int lin, int col){
 
 
 void armazenaArquivoMatriz(char* filename){
-    int* dimensaoMatriz;
+
+	int qtde_linhas_asfalto = 0;
+	int qtde_colunas_asfalto = 1;
+	char caractere;
+	FILE *file_asfalto;
+	char arquivo_asfalto [] = "DataSet/asphalt/asphalt_01.txt";
+	int* dimensaoMatriz;
+
+	file_asfalto = fopen(arquivo_asfalto, "r");
+
+    if(file_asfalto==NULL){
+	    
+	    printf("Falha!\n");
+	} else {
+
+		while((caractere = fgetc(file_asfalto)) != EOF) {
+			
+			if(caractere == '\n') {
+				
+				qtde_linhas_asfalto ++;
+			} else if(qtde_linhas_asfalto == 0 && caractere == ';'){
+
+				qtde_colunas_asfalto ++;
+			}
+		}
+	}
+
+	fclose(file_asfalto);
+
+	FILE *file;
+    file = fopen(filename, "r");
+
+    int **matrizImagem = (int**)calloc(qtde_linhas_asfalto,sizeof(int*));
+
+    for(int i=0; i<qtde_linhas_asfalto; i++){
+    
+        matrizImagem[i]=(int*)calloc(qtde_colunas_asfalto,sizeof(int));
+    }
+
+    rewind(file);
+
+    if(file==NULL){
+    
+    	printf("ERRO!\n");
+    } else {
+        for(int i=0; i<qtde_linhas_asfalto-1; i++){
+          for(int j=0; j<qtde_colunas_asfalto-1; j++){
+     	       fscanf(file, "%d%*c", &matrizImagem[i][j]);
+	        }
+        }
+    }
+
+    /*
     dimensaoMatriz = calculaDimensao(filename);
     int lin = dimensaoMatriz[0];
     int col = dimensaoMatriz[1];
-
 
     FILE *file;
     file = fopen(filename, "r");
@@ -300,20 +298,19 @@ void armazenaArquivoMatriz(char* filename){
 
     printf("\n");
 
-    fclose(file);
+    fclose(file);*/
 }
 
 int main () {
 
-	int qtde_linhas_asfalto = 0;
-	int qtde_colunas_asfalto = 1;
+	
 	int qtde_linhas_grama = 0;
 	int qtde_colunas_grama = 1;
 	int aux  = 0;
-	char caractere;
-	FILE *file;
+	
+	FILE *file_grama;
 
-	char arquivo_asfalto [] = "DataSet/asphalt/asphalt_01.txt";
+	
 	char arquivo_grama [] = "DataSet/grass/grass_01.txt";
 
 	int * ordemImagensAsfalto;
@@ -358,57 +355,41 @@ int main () {
 
     sleep(1);
     int listaArquivosTreinoAsfalto = salvaArquivos(asfaltoTreino, 1, 1);
+	
 
-    calculaLinhasColunas(&qtde_linhas_asfalto,&qtde_colunas_asfalto,&qtde_linhas_grama,&qtde_colunas_grama,
-						 arquivo_asfalto,arquivo_grama);
-    printf("%d\n", qtde_linhas_grama);
+	//IMPORTANTE PRA CARALHO
+
+	/*int **matrizImagem = (int**)calloc(qtde_linhas_asfalto,sizeof(int*));
+
+    for(int aux = 0; aux <qtde_linhas_asfalto; aux ++){
+       
+        matrizImagem[aux]=(int*)calloc(qtde_colunas_asfalto,sizeof(int));
+    }
+
+	rewind(file_asfalto);
+	rewind(file_grama);
+
+    if(file_asfalto == NULL) {
+    	
+    	printf("ERRO!\n");
+    } else {
+      	
+      	for(int aux = 0; aux < qtde_linhas_asfalto - 1; aux ++){
+        	
+        	for(int auxColuna = 0; auxColuna < qtde_colunas_asfalto-1; qtde_colunas_asfalto++){
+     	       fscanf(file, "%d%*c", &matrizImagem[i][j]);
+	        }
+        }
+    }*/
 
     /*
 		FAZER UM MÉTODO PRA CALCULAR A QUANTIDADE DE LINHAS E COLUNAS. DE PREFERENCIA QUE 
 		RETORNE O VALOR POR REFENCIA
     */
 
-    	//file = fopen(arquivo_asfalto, "r");
+    
 
-  	/*if(file==NULL){
-	    
-	    printf("Falha!\n");
-	} else {
-
-		while((caractere = fgetc(file)) != EOF) {
-			
-			if(caractere == '\n') {
-				
-				qtde_linhas_asfalto ++;
-			} else if(qtde_linhas_asfalto == 0 && caractere == ';'){
-
-				qtde_colunas_asfalto ++;
-			}
-		}
-	}
-
-	fclose(file);
-
-	file = fopen(arquivo_asfalto, "r");
-
-  	if(file==NULL){
-	    
-	    printf("Falha!\n");
-	} else {
-
-		while((caractere = fgetc(file)) != EOF) {
-			
-			if(caractere == '\n') {
-				
-				qtde_linhas_grama ++;
-			} else if(qtde_linhas_grama == 0 && caractere == ';'){
-
-				qtde_colunas_grama ++;
-			}
-		}
-	}
-
-	fclose(file);
+	//fclose(file);
 
     /*char arquivoNome[50];
     char conteudoLinha[256];
@@ -424,4 +405,16 @@ int main () {
            armazenaArquivoMatriz(conteudoLinha);
         }
     }*/
+
+    char arquivoNome[50];
+    char conteudoLinha[256];
+
+    int linha, codigoArquivo;
+    for (codigoArquivo = 2; codigoArquivo < 4; codigoArquivo++){
+        for (linha = 0; linha < 25; linha++){
+            pegaLinhaNome(codigoArquivo, linha, arquivoNome, conteudoLinha);
+            sleep(1);
+           armazenaArquivoMatriz(conteudoLinha);
+        }
+    }
 }
