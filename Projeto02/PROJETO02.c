@@ -141,47 +141,18 @@ void pegaLinhaNome(int codigoArquivo, int linha, char* filename, char* conteudoL
     fclose(fptr);    
 }
 
-int* calculaDimensao(char* filename){
-    int *dimensaoMatriz = (int*) calloc (2,sizeof(int));
+void calculaILBP(int *matrizImagem[], int linha, int coluna){
 
-    //printf(filename);
+	int soma = 0;
+	double media = 0;
 
-    FILE *arq;
-    char c, end = '\n';
-    int eol = 0;
+	for(int aux = 0; aux < linha; aux ++) {
+		for(int auxLinha = 0; auxLinha < coluna; auxLinha ++) {
+			soma += matrizImagem[auxLinha][auxColuna];
+		}
+	}
 
-
-    if ((arq = fopen(filename, "r")) == NULL) {
-        printf("Erro ao abrir o arquivo.");
-    }
-    else {
-        while(fread(&c, sizeof(char), 1, arq)) {
-            if (c == '\n'){
-              //  printf("%d",dimensaoMatriz[0]);
-                dimensaoMatriz[0]++;
-                eol = 1;
-            }
-            if(c == ';' && eol == 0){
-                dimensaoMatriz[1]++;
-            }
-        }
-    }
-    dimensaoMatriz[1]++;
-
-    sleep(1);
-    printf("dimensao matriz %d\t %d", dimensaoMatriz[0], dimensaoMatriz[1]);
-
-    fclose(arq);
-    return dimensaoMatriz;
-}
-
-void calculaILBP(int *mat[], int lin, int col){
-    int i = 0;
-    int j = 0;
-
-   int* ilbp = (int *)calloc(pow(2, 9), sizeof(int));
-   FILE* ilbp_file;
-   fopen("ilpb.txt", "w");
+	media = (double) soma / linha;
 }
 
 
@@ -218,11 +189,11 @@ void armazenaArquivoMatriz(char* filename){
 	FILE *file;
     file = fopen(filename, "r");
 
-    int **matrizImagem = (int**)calloc(qtde_linhas_asfalto,sizeof(int*));
+    int **matrizImagem = (int**)malloc(qtde_linhas_asfalto * sizeof(int*));
 
-    for(int i=0; i<qtde_linhas_asfalto; i++){
+    for(int auxLinha = 0; auxLinha < qtde_linhas_asfalto; auxLinha ++){
     
-        matrizImagem[i]=(int*)calloc(qtde_colunas_asfalto,sizeof(int));
+        matrizImagem[auxLinha] = (int*) malloc(qtde_colunas_asfalto * sizeof(int));
     }
 
     rewind(file);
@@ -231,18 +202,14 @@ void armazenaArquivoMatriz(char* filename){
     
     	printf("ERRO!\n");
     } else {
-        for(int i=0; i<qtde_linhas_asfalto-1; i++){
-          for(int j=0; j<qtde_colunas_asfalto-1; j++){
-     	       fscanf(file, "%d%*c", &matrizImagem[i][j]);
+        
+        for(int auxLinha = 0; auxLinha < qtde_linhas_asfalto; auxLinha++){
+          
+          for(int auxColuna = 0; auxColuna < qtde_colunas_asfalto; auxColuna++){
+     	   
+               fscanf(file, "%d%*c", &matrizImagem[auxLinha][auxColuna]);
 	        }
         }
-    }
-
-    for(int i=0; i<qtde_linhas_asfalto-1; i++){
-        for(int j=0; j<qtde_colunas_asfalto-1; j++){
-     	    printf("%d",matrizImagem[i][j]);
-	    }
-	        printf("\n");
     }
 
     sleep(1);
@@ -253,40 +220,6 @@ void armazenaArquivoMatriz(char* filename){
     printf("\n");
 
     fclose(file);
-
-    /*
-    dimensaoMatriz = calculaDimensao(filename);
-    int lin = dimensaoMatriz[0];
-    int col = dimensaoMatriz[1];
-
-    FILE *file;
-    file = fopen(filename, "r");
-
-    int **matrizImagem = (int**)calloc(lin,sizeof(int*));
-
-    for(int i=0; i<lin; i++){
-        matrizImagem[i]=(int*)calloc(col,sizeof(int));
-    }
-
-    rewind(file);
-
-    if(file==NULL){
-    printf("ERRO!\n");
-    } else {
-        for(int i=0; i<lin-1; i++){
-          for(int j=0; j<col-1; j++){
-     	       fscanf(file, "%d%*c", &matrizImagem[i][j]);
-	        }
-        }
-    }
-	sleep(1);
-	//printf("Preparando imagem pro ILPB...");
-	sleep(1);
-    calculaILBP(matrizImagem, lin, col);
-
-    printf("\n");
-
-    fclose(file);*/
 }
 
 int main () {
@@ -343,63 +276,15 @@ int main () {
 
     sleep(1);
     int listaArquivosTreinoAsfalto = salvaArquivos(asfaltoTreino, 1, 1);
-	
-
-	//IMPORTANTE PRA CARALHO
-
-	/*int **matrizImagem = (int**)calloc(qtde_linhas_asfalto,sizeof(int*));
-
-    for(int aux = 0; aux <qtde_linhas_asfalto; aux ++){
-       
-        matrizImagem[aux]=(int*)calloc(qtde_colunas_asfalto,sizeof(int));
-    }
-
-	rewind(file_asfalto);
-	rewind(file_grama);
-
-    if(file_asfalto == NULL) {
-    	
-    	printf("ERRO!\n");
-    } else {
-      	
-      	for(int aux = 0; aux < qtde_linhas_asfalto - 1; aux ++){
-        	
-        	for(int auxColuna = 0; auxColuna < qtde_colunas_asfalto-1; qtde_colunas_asfalto++){
-     	       fscanf(file, "%d%*c", &matrizImagem[i][j]);
-	        }
-        }
-    }*/
-
-    /*
-		FAZER UM MÉTODO PRA CALCULAR A QUANTIDADE DE LINHAS E COLUNAS. DE PREFERENCIA QUE 
-		RETORNE O VALOR POR REFENCIA
-    */
-
-    
-
-	//fclose(file);
-
-    /*char arquivoNome[50];
-    char conteudoLinha[256];
-
-    int linha, codigoArquivo;
-
-    //treinamento do sistema
-
-    for (codigoArquivo = 2; codigoArquivo < 4; codigoArquivo++){
-        for (linha = 0; linha < 25; linha++){
-            pegaLinhaNome(codigoArquivo, linha, arquivoNome, conteudoLinha);
-            sleep(1);
-           armazenaArquivoMatriz(conteudoLinha);
-        }
-    }*/
 
     char arquivoNome[50];
     char conteudoLinha[256];
-
     int linha, codigoArquivo;
+
     for (codigoArquivo = 2; codigoArquivo < 4; codigoArquivo++){
+    
         for (linha = 0; linha < 25; linha++){
+    
             pegaLinhaNome(codigoArquivo, linha, arquivoNome, conteudoLinha);
             sleep(1);
            armazenaArquivoMatriz(conteudoLinha);
