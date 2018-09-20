@@ -43,31 +43,26 @@ int salvaArquivos(int *array, int testeOuTreino, int gramaOuAsfalto){
     int tipo;
 
     if(testeOuTreino == 0 && gramaOuAsfalto == 0){
-       
         strcpy(nome,"ArquivosTeste/teste_grass.txt");
         strcpy(diretorio,"DataSet/grass/grass_");
         tipo = 0;
     }
     else if (testeOuTreino == 0 && gramaOuAsfalto == 1){
-       
         strcpy(nome,"ArquivosTeste/teste_asphalt.txt");
         strcpy(diretorio,"DataSet/asphalt/asphalt_");
         tipo = 1;
     }
     else if (testeOuTreino == 1 && gramaOuAsfalto == 0){
-       
         strcpy(nome,"ArquivosTeste/treino_grass.txt");
         strcpy(diretorio,"DataSet/grass/grass_");
         tipo = 2;
     }
     else if (testeOuTreino == 1 && gramaOuAsfalto == 1){
-       
         strcpy(nome,"ArquivosTeste/treino_asphalt.txt");
         strcpy(diretorio,"DataSet/asphalt/asphalt_");
         tipo = 3;
     }
     else{
-       
         printf("ERRO");
     }
     printf("Criando: %s \n", nome);
@@ -76,9 +71,9 @@ int salvaArquivos(int *array, int testeOuTreino, int gramaOuAsfalto){
     arquivo = fopen(nome, "wt");
 
     int aux, aux2;
-    char temp[MAX];
+    char temp[50];
 
-    for(i = 0; i < NUMERO_SORTEIO; i++){
+    for(i = 0; i < 25; i++){
          if(array[i]<10){
             aux = sprintf(temp, "%s0%d.txt\n", diretorio, array[i]);
             fprintf(arquivo,"%s" ,temp);
@@ -91,22 +86,41 @@ int salvaArquivos(int *array, int testeOuTreino, int gramaOuAsfalto){
     return tipo;
 }
 
-int main () {
+void nomeArquivo(int codigoArquivo, char* nome){
+    
+    switch(codigoArquivo){
+    
+    	case(0):
+    	
+    		strcpy(nome,"ArquivosTeste/teste_grass.txt");
+    	break;
 
-	int qtde_linhas_asfalto = 0;
+    	case(1):
+    	
+    		strcpy(nome,"ArquivosTeste/teste_asphalt.txt");
+    	break;
+
+    	case(2):
+    		
+    		strcpy(nome,"ArquivosTeste/treino_grass.txt");
+    	break;
+
+    	case(3):
+    	
+    		strcpy(nome,"ArquivosTeste/treino_asphalt.txt");
+    	break;
+    }
+}
+
+void pegaLinhaNome(int codigoArquivo, int linha, char* filename, char* conteudoLinha){
+    
+    nomeArquivo(codigoArquivo, filename);
+
+    FILE *file;
+    int qtde_linhas_asfalto = 0;
 	int qtde_colunas_asfalto = 1;
-	int qtde_linhas_grama = 0;
-	int qtde_colunas_grama = 1;
-	int aux  = 0;
-	char caractere;
-	FILE *file;
-
-	char arquivo_asfalto [] = "DataSet/asphalt/asphalt_01.txt";
-	char arquivo_grama [] = "DataSet/grass/grass_01.txt";
-
-	file = fopen(arquivo_asfalto, "r");
-
-  	if(file==NULL){
+    
+    if(file==NULL){
 	    
 	    printf("Falha!\n");
 	} else {
@@ -122,29 +136,128 @@ int main () {
 			}
 		}
 	}
+    /*FILE *fptr;
 
-	fclose(file);
+    fptr = fopen(filename, "r");
+    rewind(fptr);
+    int count = 0;
+    char buffer[256];
+    while (fgets(buffer, sizeof buffer, fptr))
+    {
+        if (count == linha){
+            break;
+        }
+        else{
+            count++;
+        }
+    }
 
-	file = fopen(arquivo_asfalto, "r");
+    strtok(buffer, "\n");
+    printf("este eh o buffer %s\n", buffer);
+    strcpy(conteudoLinha, buffer);
+    fclose(fptr);*/
+}
 
-  	if(file==NULL){
-	    
-	    printf("Falha!\n");
-	} else {
+int* calculaDimensao(char* filename){
+    int *dimensaoMatriz = (int*) calloc (2,sizeof(int));
 
-		while((caractere = fgetc(file)) != EOF) {
-			
-			if(caractere == '\n') {
-				
-				qtde_linhas_grama ++;
-			} else if(qtde_linhas_grama == 0 && caractere == ';'){
+    //printf(filename);
 
-				qtde_colunas_grama ++;
-			}
-		}
-	}
+    FILE *arq;
+    char c, end = '\n';
+    int eol = 0;
 
-	fclose(file);
+
+    if ((arq = fopen(filename, "r")) == NULL) {
+        printf("Erro ao abrir o arquivo.");
+    }
+    else {
+        while(fread(&c, sizeof(char), 1, arq)) {
+            if (c == '\n'){
+              //  printf("%d",dimensaoMatriz[0]);
+                dimensaoMatriz[0]++;
+                eol = 1;
+            }
+            if(c == ';' && eol == 0){
+                dimensaoMatriz[1]++;
+            }
+        }
+    }
+    dimensaoMatriz[1]++;
+
+    sleep(1);
+    printf("dimensao matriz %d\t %d", dimensaoMatriz[0], dimensaoMatriz[1]);
+
+    fclose(arq);
+    return dimensaoMatriz;
+}
+
+void calculaILBP(int *mat[], int lin, int col){
+    int i = 0;
+    int j = 0;
+
+    // for (i = 0 ;i<lin;i++){
+    //     for(j=0;col;j++){
+         // printf("%d\t", (*mat + 0)+0 );
+    //     }
+    //     printf("\n");
+    // }
+
+   int* ilbp = (int *)calloc(pow(2, 9), sizeof(int));
+   FILE* ilbp_file;
+   fopen("ilpb.txt", "w");
+}
+
+
+void armazenaArquivoMatriz(char* filename){
+    int* dimensaoMatriz;
+    dimensaoMatriz = calculaDimensao(filename);
+    int lin = dimensaoMatriz[0];
+    int col = dimensaoMatriz[1];
+
+
+    FILE *file;
+    file = fopen(filename, "r");
+
+    int **matrizImagem = (int**)calloc(lin,sizeof(int*));
+
+    for(int i=0; i<lin; i++){
+        matrizImagem[i]=(int*)calloc(col,sizeof(int));
+    }
+
+    rewind(file);
+
+    if(file==NULL){
+    printf("ERRO!\n");
+    } else {
+        for(int i=0; i<lin-1; i++){
+          for(int j=0; j<col-1; j++){
+     	       fscanf(file, "%d%*c", &matrizImagem[i][j]);
+	        }
+        }
+    }
+	sleep(1);
+	//printf("Preparando imagem pro ILPB...");
+	sleep(1);
+    calculaILBP(matrizImagem, lin, col);
+
+    printf("\n");
+
+    fclose(file);
+}
+
+int main () {
+
+	int qtde_linhas_asfalto = 0;
+	int qtde_colunas_asfalto = 1;
+	int qtde_linhas_grama = 0;
+	int qtde_colunas_grama = 1;
+	int aux  = 0;
+	char caractere;
+	FILE *file;
+
+	char arquivo_asfalto [] = "DataSet/asphalt/asphalt_01.txt";
+	char arquivo_grama [] = "DataSet/grass/grass_01.txt";
 
 	int * ordemImagensAsfalto;
     int * ordemImagensGrama;
@@ -188,4 +301,61 @@ int main () {
 
     sleep(1);
     int listaArquivosTreinoAsfalto = salvaArquivos(asfaltoTreino, 1, 1);
+
+    	file = fopen(arquivo_asfalto, "r");
+
+  	/*if(file==NULL){
+	    
+	    printf("Falha!\n");
+	} else {
+
+		while((caractere = fgetc(file)) != EOF) {
+			
+			if(caractere == '\n') {
+				
+				qtde_linhas_asfalto ++;
+			} else if(qtde_linhas_asfalto == 0 && caractere == ';'){
+
+				qtde_colunas_asfalto ++;
+			}
+		}
+	}
+
+	fclose(file);
+
+	file = fopen(arquivo_asfalto, "r");
+
+  	if(file==NULL){
+	    
+	    printf("Falha!\n");
+	} else {
+
+		while((caractere = fgetc(file)) != EOF) {
+			
+			if(caractere == '\n') {
+				
+				qtde_linhas_grama ++;
+			} else if(qtde_linhas_grama == 0 && caractere == ';'){
+
+				qtde_colunas_grama ++;
+			}
+		}
+	}
+
+	fclose(file);
+
+    /*char arquivoNome[50];
+    char conteudoLinha[256];
+
+    int linha, codigoArquivo;
+
+    //treinamento do sistema
+
+    for (codigoArquivo = 2; codigoArquivo < 4; codigoArquivo++){
+        for (linha = 0; linha < 25; linha++){
+            pegaLinhaNome(codigoArquivo, linha, arquivoNome, conteudoLinha);
+            sleep(1);
+           armazenaArquivoMatriz(conteudoLinha);
+        }
+    }*/
 }
