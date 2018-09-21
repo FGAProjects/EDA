@@ -146,13 +146,53 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
 	int soma = 0;
 	double media = 0;
 
-	for(int aux = 0; aux < linha; aux ++) {
-		for(int auxLinha = 0; auxLinha < coluna; auxLinha ++) {
-			soma += matrizImagem[auxLinha][auxColuna];
-		}
-	}
+	int **matrizMedia = (int**)malloc(linha * sizeof(int*));
 
-	media = (double) soma / linha;
+    for(int auxLinha = 0; auxLinha < linha; auxLinha ++){
+    
+        matrizMedia[auxLinha] = (int*) malloc(coluna * sizeof(int));
+    }
+
+    int *matrizBinaria = (int*) malloc(linha * sizeof(int));
+
+    for(int auxLinha = 0; auxLinha < linha - 2; auxLinha ++) {
+        
+        for(int auxColuna = 0; auxColuna < coluna -2; auxColuna ++) {
+            
+            soma = 0;           
+            for(int auxLinhaTrinca = auxLinha; auxLinhaTrinca < auxLinha + 3; auxLinhaTrinca ++) {
+
+                for(int auxColunaTrinca = auxColuna; auxColunaTrinca < auxColuna + 3; auxColunaTrinca ++) {
+                    
+                    soma += matrizImagem[auxLinhaTrinca][auxColunaTrinca];
+                }
+            }
+
+            media = (double) soma / 9;
+            matrizMedia[auxLinha][auxColuna] = media;
+        }       
+    }
+
+    for(int auxLinha = 0; auxLinha < linha - 2; auxLinha ++) {
+        
+        for(int auxColuna = 0; auxColuna < coluna -2; auxColuna ++) {
+            
+            soma = 0;           
+            for(int auxLinhaTrinca = auxLinha; auxLinhaTrinca < auxLinha + 3; auxLinhaTrinca ++) {
+
+                for(int auxColunaTrinca = auxColuna; auxColunaTrinca < auxColuna + 3; auxColunaTrinca ++) {
+                    
+                    if(matrizMedia[auxLinha][auxColuna] > matrizImagem[auxLinhaTrinca][auxColunaTrinca]) {
+                        
+                        matrizBinaria[auxLinhaTrinca] = 1;
+                    } else {
+                        
+                        matrizBinaria[auxLinhaTrinca] = 0;
+                    }
+                }
+            }
+        }       
+    }
 }
 
 
@@ -287,7 +327,7 @@ int main () {
     
             pegaLinhaNome(codigoArquivo, linha, arquivoNome, conteudoLinha);
             sleep(1);
-           armazenaArquivoMatriz(conteudoLinha);
+            armazenaArquivoMatriz(conteudoLinha);
         }
     }
 }
