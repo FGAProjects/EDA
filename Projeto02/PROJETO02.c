@@ -7,6 +7,21 @@
 #define MAX 50
 #define NUMERO_SORTEIO 25
 
+int binarioDecimal(int numero_binario) {
+
+    int total  = 0;
+    int potenc = 1;
+
+    while(numero_binario > 0) {
+    
+        total += numero_binario % 10 * potenc;
+        numero_binario    = numero_binario / 10;
+        potenc = potenc * 2;
+    }
+
+    return total;
+}
+
 int *sorteiaTesteTreino() {
 
     srand(time(NULL));
@@ -79,9 +94,11 @@ int salvaArquivos(int *array, int testeOuTreino, int gramaOuAsfalto){
 
     for(i = 0; i < 25; i++){
          if(array[i]<10){
+
             aux = sprintf(temp, "%s0%d.txt\n", diretorio, array[i]);
             fprintf(arquivo,"%s" ,temp);
          }else if(array[i]>=10){
+            
             aux = sprintf(temp, "%s%d.txt\n", diretorio, array[i]);
             fprintf(arquivo, "%s", temp);
         }
@@ -116,6 +133,8 @@ void nomeArquivo(int codigoArquivo, char* nome){
     }
 }
 
+
+
 void pegaLinhaNome(int codigoArquivo, int linha, char* filename, char* conteudoLinha){
     
     nomeArquivo(codigoArquivo, filename);
@@ -139,6 +158,23 @@ void pegaLinhaNome(int codigoArquivo, int linha, char* filename, char* conteudoL
     printf("este eh o buffer %s\n", buffer);
     strcpy(conteudoLinha, buffer);
     fclose(fptr);    
+}
+
+void binario(int vetor[],int vezes) {
+
+    char *vetorBinario = (char*) malloc(vezes * sizeof(int));
+    int binario = 0;
+
+    for(int aux = 0; aux < vezes; aux ++) {
+
+        vetorBinario[aux] = vetor[aux] + '0';
+    }
+
+    binario = atoi(vetorBinario);
+    binario = binarioDecimal(binario);
+    printf("%d \n", binario);
+
+    free(vetorBinario);
 }
 
 void calculaILBP(int *matrizImagem[], int linha, int coluna){
@@ -193,8 +229,9 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
             }
         }       
     }
-}
 
+    binario(matrizBinaria,linha);
+}
 
 void armazenaArquivoMatriz(char* filename){
 
@@ -317,13 +354,13 @@ int main () {
     sleep(1);
     int listaArquivosTreinoAsfalto = salvaArquivos(asfaltoTreino, 1, 1);
 
-    char arquivoNome[50];
+    char arquivoNome[MAX];
     char conteudoLinha[256];
     int linha, codigoArquivo;
 
     for (codigoArquivo = 2; codigoArquivo < 4; codigoArquivo++){
     
-        for (linha = 0; linha < 25; linha++){
+        for (linha = 0; linha < NUMERO_SORTEIO; linha++){
     
             pegaLinhaNome(codigoArquivo, linha, arquivoNome, conteudoLinha);
             sleep(1);
