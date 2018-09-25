@@ -7,21 +7,6 @@
 #define MAX 50
 #define NUMERO_SORTEIO 25
 
-int binarioDecimal(int numero_binario) {
-
-    int total  = 0;
-    int potenc = 1;
-
-    while(numero_binario > 0) {
-    
-        total += numero_binario % 10 * potenc;
-        numero_binario    = numero_binario / 10;
-        potenc = potenc * 2;
-    }
-
-    return total;
-}
-
 int *sorteiaTesteTreino() {
 
     srand(time(NULL));
@@ -107,6 +92,32 @@ int salvaArquivos(int *array, int testeOuTreino, int gramaOuAsfalto){
     return tipo;
 }
 
+int *binario_decimal(int num_vec[],int vezes) {
+
+    int decimal = 0;
+    int resto = 0;
+    int contador = 0;
+    int *vetor_binario = (int*) malloc(9 * sizeof(int));
+
+    for(int aux = 0; aux < vezes; aux ++) {
+
+        while(num_vec[aux] > 0) {
+
+            resto = num_vec[aux] % 10;
+            decimal = decimal + resto * pow(2,contador);
+            contador ++;
+            num_vec[aux] = num_vec[aux] / 10;
+        }
+
+        vetor_binario[aux] = decimal;
+        resto = 0;
+        decimal = 0;
+        contador = 0;
+    }
+
+    return vetor_binario;   
+}
+
 void nomeArquivo(int codigoArquivo, char* nome){
     
     switch(codigoArquivo){
@@ -145,11 +156,15 @@ void pegaLinhaNome(int codigoArquivo, int linha, char* filename, char* conteudoL
     rewind(fptr);
     int count = 0;
     char buffer[256];
+
     while (fgets(buffer, sizeof buffer, fptr)) {
+       
         if (count == linha){
+            
             break;
         }
         else{
+       
             count++;
         }
     }
@@ -158,23 +173,6 @@ void pegaLinhaNome(int codigoArquivo, int linha, char* filename, char* conteudoL
     printf("este eh o buffer %s\n", buffer);
     strcpy(conteudoLinha, buffer);
     fclose(fptr);    
-}
-
-void binario(int vetor[],int vezes) {
-
-    char *vetorBinario = (char*) malloc(vezes * sizeof(int));
-    int binario = 0;
-
-    for(int aux = 0; aux < vezes; aux ++) {
-
-        vetorBinario[aux] = vetor[aux] + '0';
-    }
-
-    binario = atoi(vetorBinario);
-    binario = binarioDecimal(binario);
-    printf("%d \n", binario);
-
-    free(vetorBinario);
 }
 
 void calculaILBP(int *matrizImagem[], int linha, int coluna){
@@ -229,8 +227,6 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
             }
         }       
     }
-
-    binario(matrizBinaria,linha);
 }
 
 void armazenaArquivoMatriz(char* filename){
