@@ -92,30 +92,39 @@ int salvaArquivos(int *array, int testeOuTreino, int gramaOuAsfalto){
     return tipo;
 }
 
-int *binario_decimal(int num_vec[],int vezes) {
+void binario_decimal(int num_vec[],int linha,int coluna) {
 
     int decimal = 0;
     int resto = 0;
     int contador = 0;
-    int *vetor_binario = (int*) malloc(9 * sizeof(int));
+    int *vetor_binario = (int*) malloc(linha * sizeof(int));
 
-    for(int aux = 0; aux < vezes; aux ++) {
+    for(int aux = 0; aux < linha; aux += 8) {
 
-        while(num_vec[aux] > 0) {
+        for(int auxColuna = 0; auxColuna < coluna; auxColuna ++) {
 
-            resto = num_vec[aux] % 10;
-            decimal = decimal + resto * pow(2,contador);
-            contador ++;
-            num_vec[aux] = num_vec[aux] / 10;
+            while(num_vec[aux] > 0) {
+
+                resto = num_vec[aux] % 10;
+                decimal = decimal + resto * pow(2,contador);
+                contador ++;
+                num_vec[aux] = num_vec[aux] / 10;
+            }
+            //vetor_binario[aux] = decimal;
+            printf("Decimal: %d\n", decimal);
+            resto = 0;
+            decimal = 0;
+            contador = 0;
         }
+    }        
+    
 
-        vetor_binario[aux] = decimal;
-        resto = 0;
-        decimal = 0;
-        contador = 0;
-    }
+    // for(int aux = 0; aux < vezes; aux ++) {
 
-    return vetor_binario;   
+    //     printf("%d\n", vetor_binario[aux]);
+    // }
+
+    //return vetor_binario;   
 }
 
 void nomeArquivo(int codigoArquivo, char* nome){
@@ -143,8 +152,6 @@ void nomeArquivo(int codigoArquivo, char* nome){
     	break;
     }
 }
-
-
 
 void pegaLinhaNome(int codigoArquivo, int linha, char* filename, char* conteudoLinha){
     
@@ -179,6 +186,8 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
 
 	int soma = 0;
 	double media = 0;
+    int contadorLinha = 0;
+    int contadorColuna = 0;
 
 	int **matrizMedia = (int**)malloc(linha * sizeof(int*));
 
@@ -187,7 +196,12 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
         matrizMedia[auxLinha] = (int*) malloc(coluna * sizeof(int));
     }
 
-    int *matrizBinaria = (int*) malloc(linha * sizeof(int));
+    int **matrizBinaria = (int**) malloc(linha * sizeof(int*));
+
+    for(int auxLinha = 0; auxLinha < linha; auxLinha ++) {
+
+        matrizBinaria[auxLinha] = (int*) malloc(coluna * sizeof(int));   
+    }
 
     for(int auxLinha = 0; auxLinha < linha - 2; auxLinha ++) {
         
@@ -218,23 +232,61 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
                     
                     if(matrizMedia[auxLinha][auxColuna] > matrizImagem[auxLinhaTrinca][auxColunaTrinca]) {
                         
-                        matrizBinaria[auxLinhaTrinca] = 1;
+                        matrizBinaria[auxLinhaTrinca][auxColunaTrinca] = 1;
                     } else {
                         
-                        matrizBinaria[auxLinhaTrinca] = 0;
+                        matrizBinaria[auxLinhaTrinca][auxLinhaTrinca] = 0;
                     }
                 }
             }
-        }       
+        }
+        contadorLinha ++;       
     }
+
+    int **matriz_decimal = (int**) malloc(contadorLinha * sizeof(int*));
+
+    for(int auxLinha = 0; auxLinha < linha; auxLinha ++) {
+
+        matriz_decimal[auxLinha] = (int*) malloc(auxLinha += 8  * sizeof(int));   
+    }
+
+    printf("\n");
+
+    for(int aux = 0; aux < contadorLinha; aux += 8) {
+
+        for(int auxColuna = 0; auxColuna < 8; auxColuna++) {
+
+            binario_decimal(matrizBinaria,contadorLinha,auxColuna + aux);
+            //printf("%d ", matrizBinaria[aux][auxColuna + aux]);
+        }
+
+        printf("\n");
+    }
+
+    printf("\n");
+
+
+    /*for(int aux = 0; aux < contadorLinha; aux += 8) {
+
+        for(int auxColuna = 0; auxColuna < 8; auxColuna++) {
+
+            matriz_decimal = binario_decimal(matrizBinaria,auxColuna);
+        }
+
+        printf("\n");
+    }*/
+
+    printf("\n");
+
+    free(matriz_decimal);
 }
 
 void armazenaArquivoMatriz(char* filename){
 
+    FILE *file_asfalto;
 	int qtde_linhas_asfalto = 0;
 	int qtde_colunas_asfalto = 1;
 	char caractere;
-	FILE *file_asfalto;
 	char arquivo_asfalto [] = "DataSet/asphalt/asphalt_01.txt";
 	int* dimensaoMatriz;
 
