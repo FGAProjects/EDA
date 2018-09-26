@@ -92,7 +92,7 @@ int salvaArquivos(int *array, int testeOuTreino, int gramaOuAsfalto){
     return tipo;
 }
 
-void binario_decimal(int num_vec[],int linha,int coluna) {
+void binario_decimal(int **num_vec,int linha,int coluna) {
 
     int decimal = 0;
     int resto = 0;
@@ -103,12 +103,12 @@ void binario_decimal(int num_vec[],int linha,int coluna) {
 
         for(int auxColuna = 0; auxColuna < coluna; auxColuna ++) {
 
-            while(num_vec[aux] > 0) {
+            while(num_vec[aux][auxColuna] > 0) {
 
-                resto = num_vec[aux] % 10;
+                resto = num_vec[aux][auxColuna] % 10;
                 decimal = decimal + resto * pow(2,contador);
                 contador ++;
-                num_vec[aux] = num_vec[aux] / 10;
+                num_vec[aux][auxColuna] = num_vec[aux][auxColuna] / 10;
             }
             //vetor_binario[aux] = decimal;
             printf("Decimal: %d\n", decimal);
@@ -124,7 +124,7 @@ void binario_decimal(int num_vec[],int linha,int coluna) {
     //     printf("%d\n", vetor_binario[aux]);
     // }
 
-    //return vetor_binario;   
+    //return vetor_binario;  */ 
 }
 
 void nomeArquivo(int codigoArquivo, char* nome){
@@ -256,8 +256,8 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
 
         for(int auxColuna = 0; auxColuna < 8; auxColuna++) {
 
-            binario_decimal(matrizBinaria,contadorLinha,auxColuna + aux);
-            //printf("%d ", matrizBinaria[aux][auxColuna + aux]);
+            printf("%d ", matrizBinaria[aux][auxColuna + aux]);
+            //binario_decimal(matrizBinaria,contadorLinha,auxColuna);
         }
 
         printf("\n");
