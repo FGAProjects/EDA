@@ -32,6 +32,7 @@ int *sorteiaTesteTreino() {
     while(x < 50);
     
     return numero_sorteado;
+    free(numero_sorteado);
 }
 
 int salvaArquivos(int *array, int testeOuTreino, int gramaOuAsfalto){
@@ -125,6 +126,7 @@ void binario_decimal(int **num_vec,int linha,int coluna) {
     // }
 
     //return vetor_binario;  */ 
+    free(vetor_binario);
 }
 
 void nomeArquivo(int codigoArquivo, char* nome){
@@ -180,6 +182,16 @@ void pegaLinhaNome(int codigoArquivo, int linha, char* filename, char* conteudoL
     printf("este eh o buffer %s\n", buffer);
     strcpy(conteudoLinha, buffer);
     fclose(fptr);    
+}
+
+int **desaloca_matriz(int linhas,int coluna,int **matriz) {
+
+    for(int aux = 0; aux < linhas; aux ++) {
+
+        free(*(matriz + aux));
+    }
+
+    free(matriz);
 }
 
 void calculaILBP(int *matrizImagem[], int linha, int coluna){
@@ -266,6 +278,7 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
     printf("\n");
 
 
+
     /*for(int aux = 0; aux < contadorLinha; aux += 8) {
 
         for(int auxColuna = 0; auxColuna < 8; auxColuna++) {
@@ -278,6 +291,8 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
 
     printf("\n");
 
+    desaloca_matriz(linha,coluna,matrizMedia);
+    desaloca_matriz(linha -2,coluna -2, matrizBinaria);
     free(matriz_decimal);
 }
 
