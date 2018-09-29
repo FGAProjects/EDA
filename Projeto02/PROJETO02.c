@@ -89,20 +89,42 @@ int salvaArquivos(int *array, int testeOuTreino, int gramaOuAsfalto){
             fprintf(arquivo, "%s", temp);
         }
     }
+
     fclose(arquivo);
     return tipo;
 }
 
-void binario_decimal(int **num_vec,int linha,int coluna) {
+int **binario_decimal(int num_vec[131329][8],int linha,int coluna) {
 
     int decimal = 0;
     int resto = 0;
     int contador = 0;
-    int *vetor_binario = (int*) malloc(linha * sizeof(int));
+    int contador_vetor = 0;
+    int **vetor_binario = (int **) malloc(linha * sizeof(int*));
+    char buffer[131329][8];
 
-    for(int aux = 0; aux < linha; aux += 8) {
+    for(int aux = 0; aux < linha; aux ++) {
 
-        for(int auxColuna = 0; auxColuna < coluna; auxColuna ++) {
+        vetor_binario[aux] = (int*) malloc(coluna * sizeof(int));
+    }
+
+    printf("Chegou aqui\n");
+
+    for(int aux = 0; aux < 131329; aux ++) {
+
+        for(int auxColuna = 0; auxColuna < 8; auxColuna ++) {
+
+            buffer[aux][auxColuna] = (char) num_vec[aux][auxColuna] + '0';
+            
+        }
+    }
+    contador = atoi(buffer);
+
+    printf("contador %d\n", contador);
+
+    /*for(int aux = 0; aux < 131329; aux ++) {
+
+        for(int auxColuna = 0; auxColuna < 8; auxColuna ++) {
 
             while(num_vec[aux][auxColuna] > 0) {
 
@@ -111,22 +133,34 @@ void binario_decimal(int **num_vec,int linha,int coluna) {
                 contador ++;
                 num_vec[aux][auxColuna] = num_vec[aux][auxColuna] / 10;
             }
-            //vetor_binario[aux] = decimal;
+            vetor_binario[aux][auxColuna] = decimal;
             printf("Decimal: %d\n", decimal);
             resto = 0;
             decimal = 0;
             contador = 0;
         }
-    }        
-    
+    }*/        
 
-    // for(int aux = 0; aux < vezes; aux ++) {
+    printf("Parou aqui\n");
+    /*for(int aux = 0; aux < linha; aux +=contador_vetor) {
+        
+        while(num_vec[aux] > 0) {
 
-    //     printf("%d\n", vetor_binario[aux]);
-    // }
+            resto = num_vec[aux] % 10;
+            decimal = decimal + resto * pow(2,contador);
+            contador ++;
+            num_vec[aux] = num_vec[aux] / 10;
+        }
+        vetor_binario[aux] = decimal;
+        printf("Decimal: %d\n", decimal);
+        resto = 0;
+        decimal = 0;
+        contador = 0;
+        contador_vetor +=8;
+    }*/
 
-    //return vetor_binario;  */ 
-    free(vetor_binario);
+    return vetor_binario;
+    //free(vetor_binario);
 }
 
 void nomeArquivo(int codigoArquivo, char* nome){
@@ -198,8 +232,9 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
 
 	int soma = 0;
 	double media = 0;
-    int contadorLinha = 0;
-    int contadorColuna = 0;
+    int contador = 0;
+    int contador_linha = 0;
+    int contador_coluna = 0;
 
 	int **matrizMedia = (int**)malloc(linha * sizeof(int*));
 
@@ -212,7 +247,14 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
 
     for(int auxLinha = 0; auxLinha < linha; auxLinha ++) {
 
-        matrizBinaria[auxLinha] = (int*) malloc(coluna * sizeof(int));   
+        matrizBinaria[auxLinha] = (int*) malloc(coluna * sizeof(int));
+    }
+
+    int **vetor_decimal = (int**) malloc(linha * sizeof(int*));
+
+    for(int auxLinha = 0; auxLinha < linha; auxLinha ++) {
+
+        vetor_decimal[auxLinha] = (int*) malloc(coluna * sizeof(int));
     }
 
     for(int auxLinha = 0; auxLinha < linha - 2; auxLinha ++) {
@@ -247,53 +289,60 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
                         matrizBinaria[auxLinhaTrinca][auxColunaTrinca] = 1;
                     } else {
                         
-                        matrizBinaria[auxLinhaTrinca][auxLinhaTrinca] = 0;
+                        matrizBinaria[auxLinhaTrinca][auxColunaTrinca] = 0;
                     }
                 }
             }
         }
-        contadorLinha ++;       
+        contador_linha ++;     
     }
 
-    int **matriz_decimal = (int**) malloc(contadorLinha * sizeof(int*));
+    printf("\n");
 
+    int linha8bits = ((linha*coluna)/8) + 1;
+
+    int bit8[linha8bits][8];
+
+    int auxlinha8bits = 0;
+    int auxColuna8bits = 0;
+    int linhaA = 0;
+    int linhaC = 0;
+
+    linhaA = linha;
+    linhaC = coluna;
+    
     for(int auxLinha = 0; auxLinha < linha; auxLinha ++) {
 
-        matriz_decimal[auxLinha] = (int*) malloc(auxLinha += 8  * sizeof(int));   
-    }
-
-    printf("\n");
-
-    for(int aux = 0; aux < contadorLinha; aux += 8) {
-
-        for(int auxColuna = 0; auxColuna < 8; auxColuna++) {
-
-            printf("%d ", matrizBinaria[aux][auxColuna + aux]);
-            //binario_decimal(matrizBinaria,contadorLinha,auxColuna);
+        for(int auxColuna = 0; auxColuna < coluna; auxColuna ++) {
+            
+            bit8[auxlinha8bits][auxColuna8bits] = matrizBinaria[auxLinha][auxColuna];
+            auxColuna8bits++;
+                       
+            if (auxColuna % 7 == 0) {
+                
+                auxlinha8bits++;
+                auxColuna8bits = 0;
+            }
         }
-
-        printf("\n");
     }
+  
 
-    printf("\n");
+    vetor_decimal = binario_decimal(bit8,linhaA,linhaC);
 
+    /*for(int auxLinha = 0; auxLinha < linha; auxLinha ++) {
 
+        for(int auxColuna = 0; auxColuna < coluna; auxColuna++) {
 
-    /*for(int aux = 0; aux < contadorLinha; aux += 8) {
-
-        for(int auxColuna = 0; auxColuna < 8; auxColuna++) {
-
-            matriz_decimal = binario_decimal(matrizBinaria,auxColuna);
+            printf("%d ", vetor_decimal[auxLinha][auxColuna]);
         }
 
         printf("\n");
     }*/
-
     printf("\n");
 
+    desaloca_matriz(linha,coluna,vetor_decimal);
     desaloca_matriz(linha,coluna,matrizMedia);
-    desaloca_matriz(linha -2,coluna -2, matrizBinaria);
-    free(matriz_decimal);
+    desaloca_matriz(linha,coluna,matrizBinaria);
 }
 
 void armazenaArquivoMatriz(char* filename){
