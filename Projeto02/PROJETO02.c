@@ -94,14 +94,14 @@ int salvaArquivos(int *array, int testeOuTreino, int gramaOuAsfalto){
     return tipo;
 }
 
-int **binario_decimal(int num_vec[131329][8],int linha,int coluna) {
+void binario_decimal(int num_vec[131329][8],int linha,int coluna) {
 
-    int decimal = 0;
+    int decimal[131329];
     int resto = 0;
     int contador = 0;
     int contador_vetor = 0;
     int **vetor_binario = (int **) malloc(linha * sizeof(int*));
-    /*char buffer[131329][8];
+    char buffer[131329][8];
 
     for(int aux = 0; aux < linha; aux ++) {
 
@@ -115,31 +115,39 @@ int **binario_decimal(int num_vec[131329][8],int linha,int coluna) {
         for(int auxColuna = 0; auxColuna < 8; auxColuna ++) {
 
             buffer[aux][auxColuna] = (char) num_vec[aux][auxColuna] + '0';
-            
+
         }
+      //  contador = atoi(buffer[aux]);
+
     }
-    contador = atoi(buffer);
 
-    printf("contador %d\n", contador);
+  //  printf("contador %d\n", contador);
 
-    /*for(int aux = 0; aux < 131329; aux ++) {
+    for(int aux = 0; aux < 131329; aux ++) {
 
         for(int auxColuna = 0; auxColuna < 8; auxColuna ++) {
+
+
+          //  decimal[aux] += pow(2*buffer[aux][auxColuna],auxColuna);
 
             while(num_vec[aux][auxColuna] > 0) {
 
                 resto = num_vec[aux][auxColuna] % 10;
-                decimal = decimal + resto * pow(2,contador);
+                decimal[aux] = decimal[aux] + resto * pow(2,contador);
                 contador ++;
                 num_vec[aux][auxColuna] = num_vec[aux][auxColuna] / 10;
             }
-            vetor_binario[aux][auxColuna] = decimal;
-            printf("Decimal: %d\n", decimal);
+
+            vetor_binario[aux][auxColuna] = decimal[aux];
+            printf("Decimal: %d\n", decimal[aux]);
             resto = 0;
-            decimal = 0;
+            //decimal = 0;
             contador = 0;
+
         }
-    }*/        
+
+        printf("Decimal: %d\n", decimal[aux]);
+    }
 
     printf("Parou aqui\n");
     /*for(int aux = 0; aux < linha; aux +=contador_vetor) {
@@ -159,7 +167,7 @@ int **binario_decimal(int num_vec[131329][8],int linha,int coluna) {
         contador_vetor +=8;
     }*/
 
-    return vetor_binario;
+    //return (*vetor_binario);
     //free(vetor_binario);
 }
 
@@ -331,6 +339,7 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
     
     printf("\n");
 
+    binario_decimal(bit8,linhaA,linhaC);
     desaloca_matriz(linha,coluna,vetor_decimal);
     desaloca_matriz(linha,coluna,matrizMedia);
     desaloca_matriz(linha,coluna,matrizBinaria);
