@@ -316,6 +316,7 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
     int linhaA = 0;
     int linhaC = 0;
     int decimal = 0;
+    int resto = 0;
 
     linhaA = linha;
     linhaC = coluna;
@@ -325,7 +326,28 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
         for(int auxColuna = 0; auxColuna < coluna; auxColuna ++) {
             
             bit8[auxlinha8bits][auxColuna8bits] = matrizBinaria[auxLinha][auxColuna];
-            printf("%d ", bit8[auxlinha8bits][auxColuna8bits]);
+            
+            auxColuna8bits++;
+                       
+            if (auxColuna % 8 == 0) {
+                
+                auxlinha8bits++;
+                auxColuna8bits = 0;
+            }
+        }
+    }
+
+    auxColuna8bits = 0;
+
+    for(int auxLinha = 0; auxLinha < 131329; auxLinha ++) {
+
+        for(int auxColuna = 0; auxColuna < 8; auxColuna ++) {
+
+            printf("%d ", bit8[auxLinha][auxColuna]);
+            resto = bit8[auxLinha][auxColuna] - ((bit8[auxLinha][auxColuna] / 10) * 10);
+            bit8[auxLinha][auxColuna] /= 10;
+            decimal += resto * pow(2,auxColuna);
+
             auxColuna8bits++;
                        
             if (auxColuna % 8 == 0) {
@@ -334,12 +356,16 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
                 auxColuna8bits = 0;
                 printf("\n");
             }
+            
+            printf("Decimal: %d \n", decimal);
+            decimal = 0;
+            resto = 0;
         }
     }
     
     printf("\n");
 
-    binario_decimal(bit8,linhaA,linhaC);
+    //binario_decimal(bit8,linhaA,linhaC);
     desaloca_matriz(linha,coluna,vetor_decimal);
     desaloca_matriz(linha,coluna,matrizMedia);
     desaloca_matriz(linha,coluna,matrizBinaria);
