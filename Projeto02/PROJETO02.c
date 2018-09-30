@@ -258,13 +258,6 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
         matrizBinaria[auxLinha] = (int*) malloc(coluna * sizeof(int));
     }
 
-    int **vetor_decimal = (int**) malloc(linha * sizeof(int*));
-
-    for(int auxLinha = 0; auxLinha < linha; auxLinha ++) {
-
-        vetor_decimal[auxLinha] = (int*) malloc(coluna * sizeof(int));
-    }
-
     for(int auxLinha = 0; auxLinha < linha - 2; auxLinha ++) {
         
         for(int auxColuna = 0; auxColuna < coluna -2; auxColuna ++) {
@@ -317,6 +310,13 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
     int linhaC = 0;
     int decimal = 0;
     int resto = 0;
+    
+    int **matriz_decimal = (int**) malloc(131329 * sizeof(int*));
+
+    for(int auxLinha = 0; auxLinha < 131329; auxLinha ++) {
+
+        matriz_decimal[auxLinha] = (int*) malloc(8 * sizeof(int));
+    }
 
     linhaA = linha;
     linhaC = coluna;
@@ -343,7 +343,6 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
 
         for(int auxColuna = 0; auxColuna < 8; auxColuna ++) {
 
-            printf("%d ", bit8[auxLinha][auxColuna]);
             resto = bit8[auxLinha][auxColuna] - ((bit8[auxLinha][auxColuna] / 10) * 10);
             bit8[auxLinha][auxColuna] /= 10;
             decimal += resto * pow(2,auxColuna);
@@ -354,19 +353,36 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
                 
                 auxlinha8bits++;
                 auxColuna8bits = 0;
-                printf("\n");
             }
             
-            printf("Decimal: %d \n", decimal);
+            matriz_decimal[auxLinha][auxColuna] = decimal;
             decimal = 0;
             resto = 0;
         }
     }
+
+    for(int auxLinha = 0; auxLinha < 131329; auxLinha ++) {
+
+        for(int auxColuna = 0; auxColuna < 8; auxColuna ++) {
+
+            printf("%d ", matriz_decimal[auxLinha][auxColuna]);
+        }
+        printf("\n");
+    }
+
+    /*for(int auxLinha = 0; auxLinha < 131329; auxLinha ++) {
+
+        for(int auxColuna = 0; auxColuna < 8; auxColuna ++) {
+
+            printf("Decimal: %d", vetor_decimal[auxLinha][auxColuna]);
+        }
+
+        printf("\n");
+    }*/
     
     printf("\n");
 
-    //binario_decimal(bit8,linhaA,linhaC);
-    desaloca_matriz(linha,coluna,vetor_decimal);
+    desaloca_matriz(131329,8,matriz_decimal);
     desaloca_matriz(linha,coluna,matrizMedia);
     desaloca_matriz(linha,coluna,matrizBinaria);
 }
