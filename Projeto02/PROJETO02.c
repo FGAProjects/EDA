@@ -101,7 +101,7 @@ int **binario_decimal(int num_vec[131329][8],int linha,int coluna) {
     int contador = 0;
     int contador_vetor = 0;
     int **vetor_binario = (int **) malloc(linha * sizeof(int*));
-    char buffer[131329][8];
+    /*char buffer[131329][8];
 
     for(int aux = 0; aux < linha; aux ++) {
 
@@ -307,6 +307,7 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
     int auxColuna8bits = 0;
     int linhaA = 0;
     int linhaC = 0;
+    int decimal = 0;
 
     linhaA = linha;
     linhaC = coluna;
@@ -316,28 +317,18 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
         for(int auxColuna = 0; auxColuna < coluna; auxColuna ++) {
             
             bit8[auxlinha8bits][auxColuna8bits] = matrizBinaria[auxLinha][auxColuna];
+            printf("%d ", bit8[auxlinha8bits][auxColuna8bits]);
             auxColuna8bits++;
                        
-            if (auxColuna % 7 == 0) {
+            if (auxColuna % 8 == 0) {
                 
                 auxlinha8bits++;
                 auxColuna8bits = 0;
+                printf("\n");
             }
         }
     }
-  
-
-    vetor_decimal = binario_decimal(bit8,linhaA,linhaC);
-
-    /*for(int auxLinha = 0; auxLinha < linha; auxLinha ++) {
-
-        for(int auxColuna = 0; auxColuna < coluna; auxColuna++) {
-
-            printf("%d ", vetor_decimal[auxLinha][auxColuna]);
-        }
-
-        printf("\n");
-    }*/
+    
     printf("\n");
 
     desaloca_matriz(linha,coluna,vetor_decimal);
