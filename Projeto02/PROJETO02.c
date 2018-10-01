@@ -94,86 +94,6 @@ int salvaArquivos(int *array, int testeOuTreino, int gramaOuAsfalto){
     return tipo;
 }
 
-void binario_decimal(int num_vec[131329][8],int linha,int coluna) {
-
-    int decimal[131329];
-    int resto = 0;
-    int contador = 0;
-    int contador_vetor = 0;
-    int **vetor_binario = (int **) malloc(linha * sizeof(int*));
-    char buffer[131329][8];
-    int maior = -1;
-    int menor = 99999;
-    double normal[131329];
-
-    for(int aux = 0; aux < linha; aux ++) {
-
-        vetor_binario[aux] = (int*) malloc(coluna * sizeof(int));
-    }
-
-    printf("Chegou aqui\n");
-
-    for(int aux = 0; aux < 131329; aux ++) {
-
-        for(int auxColuna = 0; auxColuna < 8; auxColuna ++) {
-
-            buffer[aux][auxColuna] = (char) num_vec[aux][auxColuna] + '0';
-
-        }
-
-
-    }
-
-
-    for(int aux = 0; aux < 131329; aux ++) {
-
-        for(int auxColuna = 0; auxColuna < 8; auxColuna ++) {
-
-            while(num_vec[aux][auxColuna] > 0) {
-
-                resto = num_vec[aux][auxColuna] % 10;
-                decimal[aux] = decimal[aux] + resto * pow(2,contador);
-                contador ++;
-                num_vec[aux][auxColuna] = num_vec[aux][auxColuna] / 10;
-            }
-
-            vetor_binario[aux][auxColuna] = decimal[aux];
-            printf("Decimal: %d\n", decimal[aux]);
-            resto = 0;
-            //decimal = 0;
-            contador = 0;
-
-        }
-
-        printf("Decimal: %d\n", decimal[aux]);
-    }
-
-
-    //NORMALIZAÇÃO DA MATRIZ
-	
-    for(int aux = 0; aux < 131329; aux ++) {
-
-          if(decimal[aux] > maior)
-            maior = decimal[aux];
-
-          if(decimal[aux] < menor)
-          menor = decimal[aux];
-
-    }
-
-    for(int aux = 0; aux < 131329; aux ++) {
-
-      normal[aux] = (double)(decimal[aux] - menor) / (maior - menor);
-
-
-    }
-    menor = 99999;
-    maior = -1;
-
-    return (*vetor_binario);
-    //free(vetor_binario);
-}
-
 void nomeArquivo(int codigoArquivo, char* nome){
 
     switch(codigoArquivo){
@@ -313,6 +233,10 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
     int decimal = 0;
     int resto = 0;
     int vetor_decimal[131329];
+    int maior = -1;
+    int menor = 99999;
+
+    double normal[131329];
 
     linhaA = linha;
     linhaC = coluna;
@@ -361,6 +285,30 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
         vetor_decimal[auxLinha] = soma;
         soma = 0;
     }
+
+    //NORMALIZAÇÃO DA MATRIZ
+    for(int auxLinha = 0; auxLinha < 131329; auxLinha ++) {
+
+          if(vetor_decimal[auxLinha] > maior)
+            maior = vetor_decimal[auxLinha];
+
+          if(vetor_decimal[auxLinha] < menor)
+          menor = vetor_decimal[auxLinha];
+
+    }
+
+    for(int auxLinha = 0; auxLinha < 131329; auxLinha ++)  {
+
+      normal[auxLinha] = (double)(vetor_decimal[auxLinha] - menor) / (maior - menor);
+        printf("Normal: %lf\n", normal[auxLinha]);
+
+    }
+    menor = 99999;
+    maior = -1;
+
+
+    //CALCULO DA DISTANCIA EUCLIDIANA N-DIMENSIONAL
+
 
     printf("\n");
 
