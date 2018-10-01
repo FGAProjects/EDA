@@ -270,7 +270,6 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
                     soma += matrizImagem[auxLinhaTrinca][auxColunaTrinca];
                 }
             }
-
             media = (double) soma / 9;
             matrizMedia[auxLinha][auxColuna] = media;
         }       
@@ -285,7 +284,7 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
 
                 for(int auxColunaTrinca = auxColuna; auxColunaTrinca < auxColuna + 3; auxColunaTrinca ++) {
                     
-                    if(matrizMedia[auxLinha][auxColuna] > matrizImagem[auxLinhaTrinca][auxColunaTrinca]) {
+                    if(matrizMedia[auxLinha][auxColuna] >= matrizImagem[auxLinhaTrinca][auxColunaTrinca]) {
                         
                         matrizBinaria[auxLinhaTrinca][auxColunaTrinca] = 1;
                     } else {
@@ -310,13 +309,7 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
     int linhaC = 0;
     int decimal = 0;
     int resto = 0;
-    
-    int **matriz_decimal = (int**) malloc(131329 * sizeof(int*));
-
-    for(int auxLinha = 0; auxLinha < 131329; auxLinha ++) {
-
-        matriz_decimal[auxLinha] = (int*) malloc(8 * sizeof(int));
-    }
+    int vetor_decimal[131329];
 
     linhaA = linha;
     linhaC = coluna;
@@ -338,6 +331,7 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
     }
 
     auxColuna8bits = 0;
+    soma = 0;
 
     for(int auxLinha = 0; auxLinha < 131329; auxLinha ++) {
 
@@ -353,36 +347,20 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
                 
                 auxlinha8bits++;
                 auxColuna8bits = 0;
+            } else {
+
+                soma += decimal;
             }
             
-            matriz_decimal[auxLinha][auxColuna] = decimal;
             decimal = 0;
             resto = 0;
         }
+        vetor_decimal[auxLinha] = soma;
+        soma = 0;
     }
-
-    for(int auxLinha = 0; auxLinha < 131329; auxLinha ++) {
-
-        for(int auxColuna = 0; auxColuna < 8; auxColuna ++) {
-
-            printf("%d ", matriz_decimal[auxLinha][auxColuna]);
-        }
-        printf("\n");
-    }
-
-    /*for(int auxLinha = 0; auxLinha < 131329; auxLinha ++) {
-
-        for(int auxColuna = 0; auxColuna < 8; auxColuna ++) {
-
-            printf("Decimal: %d", vetor_decimal[auxLinha][auxColuna]);
-        }
-
-        printf("\n");
-    }*/
     
     printf("\n");
 
-    desaloca_matriz(131329,8,matriz_decimal);
     desaloca_matriz(linha,coluna,matrizMedia);
     desaloca_matriz(linha,coluna,matrizBinaria);
 }
