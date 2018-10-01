@@ -150,6 +150,7 @@ void binario_decimal(int num_vec[131329][8],int linha,int coluna) {
 
 
     //NORMALIZAÇÃO DA MATRIZ
+	
     for(int aux = 0; aux < 131329; aux ++) {
 
           if(decimal[aux] > maior)
