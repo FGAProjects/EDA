@@ -14,13 +14,13 @@ int *sorteiaTesteTreino() {
 
     int x = 1, y = 0, z = 0;
     numero_sorteado[0] = rand() % 50 + 1;
-    
+
     do {
-    	
+
     	numero_sorteado[x] = rand() % 50  + 1;
         y = 0;
         while(y < x) {
-            
+
             if(numero_sorteado[y] == numero_sorteado[x]) {
                 --x;
                 break;
@@ -28,15 +28,15 @@ int *sorteiaTesteTreino() {
             ++y;
         }
         ++x;
-    } 
+    }
     while(x < 50);
-    
+
     return numero_sorteado;
     free(numero_sorteado);
 }
 
 int salvaArquivos(int *array, int testeOuTreino, int gramaOuAsfalto){
-    
+
     char nome[20];
     char diretorio[256];
     char linha[256];
@@ -44,25 +44,25 @@ int salvaArquivos(int *array, int testeOuTreino, int gramaOuAsfalto){
     int tipo;
 
     if(testeOuTreino == 0 && gramaOuAsfalto == 0){
-        
+
         strcpy(nome,"ArquivosTeste/teste_grass.txt");
         strcpy(diretorio,"DataSet/grass/grass_");
         tipo = 0;
     }
     else if (testeOuTreino == 0 && gramaOuAsfalto == 1){
-        
+
         strcpy(nome,"ArquivosTeste/teste_asphalt.txt");
         strcpy(diretorio,"DataSet/asphalt/asphalt_");
         tipo = 1;
     }
     else if (testeOuTreino == 1 && gramaOuAsfalto == 0){
-        
+
         strcpy(nome,"ArquivosTeste/treino_grass.txt");
         strcpy(diretorio,"DataSet/grass/grass_");
         tipo = 2;
     }
     else if (testeOuTreino == 1 && gramaOuAsfalto == 1){
-        
+
         strcpy(nome,"ArquivosTeste/treino_asphalt.txt");
         strcpy(diretorio,"DataSet/asphalt/asphalt_");
         tipo = 3;
@@ -84,7 +84,7 @@ int salvaArquivos(int *array, int testeOuTreino, int gramaOuAsfalto){
             aux = sprintf(temp, "%s0%d.txt\n", diretorio, array[i]);
             fprintf(arquivo,"%s" ,temp);
          }else if(array[i]>=10){
-            
+
             aux = sprintf(temp, "%s%d.txt\n", diretorio, array[i]);
             fprintf(arquivo, "%s", temp);
         }
@@ -102,6 +102,9 @@ void binario_decimal(int num_vec[131329][8],int linha,int coluna) {
     int contador_vetor = 0;
     int **vetor_binario = (int **) malloc(linha * sizeof(int*));
     char buffer[131329][8];
+    int maior = -1;
+    int menor = 99999;
+    double normal[131329];
 
     for(int aux = 0; aux < linha; aux ++) {
 
@@ -117,18 +120,14 @@ void binario_decimal(int num_vec[131329][8],int linha,int coluna) {
             buffer[aux][auxColuna] = (char) num_vec[aux][auxColuna] + '0';
 
         }
-      //  contador = atoi(buffer[aux]);
+
 
     }
 
-  //  printf("contador %d\n", contador);
 
     for(int aux = 0; aux < 131329; aux ++) {
 
         for(int auxColuna = 0; auxColuna < 8; auxColuna ++) {
-
-
-          //  decimal[aux] += pow(2*buffer[aux][auxColuna],auxColuna);
 
             while(num_vec[aux][auxColuna] > 0) {
 
@@ -149,56 +148,59 @@ void binario_decimal(int num_vec[131329][8],int linha,int coluna) {
         printf("Decimal: %d\n", decimal[aux]);
     }
 
-    printf("Parou aqui\n");
-    /*for(int aux = 0; aux < linha; aux +=contador_vetor) {
-        
-        while(num_vec[aux] > 0) {
 
-            resto = num_vec[aux] % 10;
-            decimal = decimal + resto * pow(2,contador);
-            contador ++;
-            num_vec[aux] = num_vec[aux] / 10;
-        }
-        vetor_binario[aux] = decimal;
-        printf("Decimal: %d\n", decimal);
-        resto = 0;
-        decimal = 0;
-        contador = 0;
-        contador_vetor +=8;
-    }*/
+    //NORMALIZAÇÃO DA MATRIZ
+    for(int aux = 0; aux < 131329; aux ++) {
 
-    //return (*vetor_binario);
+          if(decimal[aux] > maior)
+            maior = decimal[aux];
+
+          if(decimal[aux] < menor)
+          menor = decimal[aux];
+
+    }
+
+    for(int aux = 0; aux < 131329; aux ++) {
+
+      normal[aux] = (double)(decimal[aux] - menor) / (maior - menor);
+
+
+    }
+    menor = 99999;
+    maior = -1;
+
+    return (*vetor_binario);
     //free(vetor_binario);
 }
 
 void nomeArquivo(int codigoArquivo, char* nome){
-    
+
     switch(codigoArquivo){
-    
+
     	case(0):
-    	
+
     		strcpy(nome,"ArquivosTeste/teste_grass.txt");
     	break;
 
     	case(1):
-    	
+
     		strcpy(nome,"ArquivosTeste/teste_asphalt.txt");
     	break;
 
     	case(2):
-    		
+
     		strcpy(nome,"ArquivosTeste/treino_grass.txt");
     	break;
 
     	case(3):
-    	
+
     		strcpy(nome,"ArquivosTeste/treino_asphalt.txt");
     	break;
     }
 }
 
 void pegaLinhaNome(int codigoArquivo, int linha, char* filename, char* conteudoLinha){
-    
+
     nomeArquivo(codigoArquivo, filename);
 
     FILE *fptr;
@@ -209,13 +211,13 @@ void pegaLinhaNome(int codigoArquivo, int linha, char* filename, char* conteudoL
     char buffer[256];
 
     while (fgets(buffer, sizeof buffer, fptr)) {
-       
+
         if (count == linha){
-            
+
             break;
         }
         else{
-       
+
             count++;
         }
     }
@@ -223,7 +225,7 @@ void pegaLinhaNome(int codigoArquivo, int linha, char* filename, char* conteudoL
     strtok(buffer, "\n");
     printf("este eh o buffer %s\n", buffer);
     strcpy(conteudoLinha, buffer);
-    fclose(fptr);    
+    fclose(fptr);
 }
 
 int **desaloca_matriz(int linhas,int coluna,int **matriz) {
@@ -247,7 +249,7 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
 	int **matrizMedia = (int**)malloc(linha * sizeof(int*));
 
     for(int auxLinha = 0; auxLinha < linha; auxLinha ++){
-    
+
         matrizMedia[auxLinha] = (int*) malloc(coluna * sizeof(int));
     }
 
@@ -259,42 +261,42 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
     }
 
     for(int auxLinha = 0; auxLinha < linha - 2; auxLinha ++) {
-        
+
         for(int auxColuna = 0; auxColuna < coluna -2; auxColuna ++) {
-            
-            soma = 0;           
+
+            soma = 0;
             for(int auxLinhaTrinca = auxLinha; auxLinhaTrinca < auxLinha + 3; auxLinhaTrinca ++) {
 
                 for(int auxColunaTrinca = auxColuna; auxColunaTrinca < auxColuna + 3; auxColunaTrinca ++) {
-                    
+
                     soma += matrizImagem[auxLinhaTrinca][auxColunaTrinca];
                 }
             }
             media = (double) soma / 9;
             matrizMedia[auxLinha][auxColuna] = media;
-        }       
+        }
     }
 
     for(int auxLinha = 0; auxLinha < linha - 2; auxLinha ++) {
-        
+
         for(int auxColuna = 0; auxColuna < coluna -2; auxColuna ++) {
-            
-            soma = 0;           
+
+            soma = 0;
             for(int auxLinhaTrinca = auxLinha; auxLinhaTrinca < auxLinha + 3; auxLinhaTrinca ++) {
 
                 for(int auxColunaTrinca = auxColuna; auxColunaTrinca < auxColuna + 3; auxColunaTrinca ++) {
-                    
+
                     if(matrizMedia[auxLinha][auxColuna] >= matrizImagem[auxLinhaTrinca][auxColunaTrinca]) {
-                        
+
                         matrizBinaria[auxLinhaTrinca][auxColunaTrinca] = 1;
                     } else {
-                        
+
                         matrizBinaria[auxLinhaTrinca][auxColunaTrinca] = 0;
                     }
                 }
             }
         }
-        contador_linha ++;     
+        contador_linha ++;
     }
 
     printf("\n");
@@ -313,17 +315,17 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
 
     linhaA = linha;
     linhaC = coluna;
-    
+
     for(int auxLinha = 0; auxLinha < linha; auxLinha ++) {
 
         for(int auxColuna = 0; auxColuna < coluna; auxColuna ++) {
-            
+
             bit8[auxlinha8bits][auxColuna8bits] = matrizBinaria[auxLinha][auxColuna];
-            
+
             auxColuna8bits++;
-                       
+
             if (auxColuna % 8 == 0) {
-                
+
                 auxlinha8bits++;
                 auxColuna8bits = 0;
             }
@@ -342,23 +344,23 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
             decimal += resto * pow(2,auxColuna);
 
             auxColuna8bits++;
-                       
+
             if (auxColuna % 8 == 0) {
-                
+
                 auxlinha8bits++;
                 auxColuna8bits = 0;
             } else {
 
                 soma += decimal;
             }
-            
+
             decimal = 0;
             resto = 0;
         }
         vetor_decimal[auxLinha] = soma;
         soma = 0;
     }
-    
+
     printf("\n");
 
     desaloca_matriz(linha,coluna,matrizMedia);
@@ -377,14 +379,14 @@ void armazenaArquivoMatriz(char* filename){
 	file_asfalto = fopen(arquivo_asfalto, "r");
 
     if(file_asfalto==NULL){
-	    
+
 	    printf("Falha!\n");
 	} else {
 
 		while((caractere = fgetc(file_asfalto)) != EOF) {
-			
+
 			if(caractere == '\n') {
-				
+
 				qtde_linhas_asfalto ++;
 			} else if(qtde_linhas_asfalto == 0 && caractere == ';'){
 
@@ -401,21 +403,21 @@ void armazenaArquivoMatriz(char* filename){
     int **matrizImagem = (int**)malloc(qtde_linhas_asfalto * sizeof(int*));
 
     for(int auxLinha = 0; auxLinha < qtde_linhas_asfalto; auxLinha ++){
-    
+
         matrizImagem[auxLinha] = (int*) malloc(qtde_colunas_asfalto * sizeof(int));
     }
 
     rewind(file);
 
     if(file==NULL){
-    
+
     	printf("ERRO!\n");
     } else {
-        
+
         for(int auxLinha = 0; auxLinha < qtde_linhas_asfalto; auxLinha++){
-          
+
           for(int auxColuna = 0; auxColuna < qtde_colunas_asfalto; auxColuna++){
-     	   
+
                fscanf(file, "%d%*c", &matrizImagem[auxLinha][auxColuna]);
 	        }
         }
@@ -433,14 +435,14 @@ void armazenaArquivoMatriz(char* filename){
 
 int main () {
 
-	
+
 	int qtde_linhas_grama = 0;
 	int qtde_colunas_grama = 1;
 	int aux  = 0;
-	
+
 	FILE *file_grama;
 
-	
+
 	char arquivo_grama [] = "DataSet/grass/grass_01.txt";
 
 	int * ordemImagensAsfalto;
@@ -448,7 +450,7 @@ int main () {
 
     ordemImagensAsfalto = sorteiaTesteTreino();
     sleep(1);
-    ordemImagensGrama = sorteiaTesteTreino(); 
+    ordemImagensGrama = sorteiaTesteTreino();
 
     int asfaltoTreino[NUMERO_SORTEIO];
     int asfaltoTeste[NUMERO_SORTEIO];
@@ -457,7 +459,7 @@ int main () {
 
     printf("Sorteando arquivos de Treino... \n");
     for(aux = 0; aux < NUMERO_SORTEIO; aux ++){
-     
+
         asfaltoTreino[aux] = *(ordemImagensAsfalto + aux);
         gramaTreino[aux] = *(ordemImagensGrama + aux);
     }
@@ -466,7 +468,7 @@ int main () {
 
     printf("Sorteando arquivos de Teste...\n");
     for(; aux < MAX; aux ++){
-     
+
         asfaltoTeste[aux - NUMERO_SORTEIO] = *(ordemImagensAsfalto + aux);
         gramaTeste[aux - NUMERO_SORTEIO] = *(ordemImagensGrama + aux);
     }
@@ -491,9 +493,9 @@ int main () {
     int linha, codigoArquivo;
 
     for (codigoArquivo = 2; codigoArquivo < 4; codigoArquivo++){
-    
+
         for (linha = 0; linha < NUMERO_SORTEIO; linha++){
-    
+
             pegaLinhaNome(codigoArquivo, linha, arquivoNome, conteudoLinha);
             sleep(1);
             armazenaArquivoMatriz(conteudoLinha);
