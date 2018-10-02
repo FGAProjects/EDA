@@ -299,9 +299,8 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
 
     for(int auxLinha = 0; auxLinha < 131329; auxLinha ++)  {
 
-      normal[auxLinha] = (double)(vetor_decimal[auxLinha] - menor) / (maior - menor);
+        normal[auxLinha] = (double)(vetor_decimal[auxLinha] - menor) / (maior - menor);
         printf("Normal: %lf\n", normal[auxLinha]);
-
     }
     menor = 99999;
     maior = -1;
@@ -384,13 +383,11 @@ void armazenaArquivoMatriz(char* filename){
 
 int main () {
 
-
 	int qtde_linhas_grama = 0;
 	int qtde_colunas_grama = 1;
 	int aux  = 0;
 
 	FILE *file_grama;
-
 
 	char arquivo_grama [] = "DataSet/grass/grass_01.txt";
 
