@@ -222,21 +222,23 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
 
     printf("\n");
 
-    int linha8bits = ((linha*coluna)/8) + 1;
+    int linha8bits = ((linha*coluna)/9) + 1;
 
-    int bit8[linha8bits][8];
+    int bit8[linha8bits][9];
 
     int auxlinha8bits = 0;
     int auxColuna8bits = 0;
     int linhaA = 0;
     int linhaC = 0;
     int decimal = 0;
+    int valor = 131329;
     int resto = 0;
-    int vetor_decimal[131329];
+    int vetor_decimal[valor];
     int maior = -1;
     int menor = 99999;
 
-    double normal[131329];
+
+    double normal[valor];
 
     linhaA = linha;
     linhaC = coluna;
@@ -249,7 +251,7 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
 
             auxColuna8bits++;
 
-            if (auxColuna % 8 == 0) {
+            if (auxColuna % 9 == 0) {
 
                 auxlinha8bits++;
                 auxColuna8bits = 0;
@@ -260,9 +262,9 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
     auxColuna8bits = 0;
     soma = 0;
 
-    for(int auxLinha = 0; auxLinha < 131329; auxLinha ++) {
+    for(int auxLinha = 0; auxLinha < valor; auxLinha ++) {
 
-        for(int auxColuna = 0; auxColuna < 8; auxColuna ++) {
+        for(int auxColuna = 0; auxColuna < 9; auxColuna ++) {
 
             resto = bit8[auxLinha][auxColuna] - ((bit8[auxLinha][auxColuna] / 10) * 10);
             bit8[auxLinha][auxColuna] /= 10;
@@ -287,7 +289,7 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
     }
 
     //NORMALIZAÇÃO DA MATRIZ
-    for(int auxLinha = 0; auxLinha < 131329; auxLinha ++) {
+    for(int auxLinha = 0; auxLinha < valor; auxLinha ++) {
 
           if(vetor_decimal[auxLinha] > maior)
             maior = vetor_decimal[auxLinha];
@@ -297,7 +299,7 @@ void calculaILBP(int *matrizImagem[], int linha, int coluna){
 
     }
 
-    for(int auxLinha = 0; auxLinha < 131329; auxLinha ++)  {
+    for(int auxLinha = 0; auxLinha < valor; auxLinha ++)  {
 
         normal[auxLinha] = (double)(vetor_decimal[auxLinha] - menor) / (maior - menor);
         printf("Normal: %lf\n", normal[auxLinha]);
