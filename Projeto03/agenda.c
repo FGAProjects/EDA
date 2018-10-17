@@ -25,11 +25,15 @@ void opcao(Agenda *agenda, int op);
 void *busca(Agenda *agenda);
 Agenda *buscaRegistro(Agenda *agenda, char nome[]);
 
-int vazia(Agenda *agenda){
-  if(agenda->prox==NULL)
-    return 1;
-  else
-    return 0;
+int vazia(Agenda *agenda) {
+  
+    if(agenda->prox==NULL) {
+        
+        return 1;
+    } else {
+        
+        return 0;
+    }
 }
 
 int main(){
@@ -45,7 +49,7 @@ int main(){
         agenda=inicializa();
         int opt;
 
-        do{
+        do {
 
             opt=menu();
 
@@ -86,7 +90,7 @@ int main(){
     }
 }
 
-int menu(){
+int menu() {
 
     int opcao = 0;
 
@@ -105,12 +109,12 @@ int menu(){
     return opcao;
 }
 
-Agenda *inicializa(void){
+Agenda *inicializa(void) {
   
     return NULL;
 }
 
-Agenda *insere(Agenda *agenda){
+Agenda *insere(Agenda *agenda) {
 
     Agenda *novo = (Agenda*)malloc(sizeof(Agenda));
 
@@ -162,7 +166,7 @@ Agenda *insere(Agenda *agenda){
     return novo;
 }
 
-void imprime(Agenda *agenda){
+void imprime(Agenda *agenda) {
 
     Agenda *contatos;
 
@@ -174,7 +178,7 @@ void imprime(Agenda *agenda){
         printf("\n\nVisualizar registros:\n");    
     }
     
-    for(contatos=agenda; contatos!=NULL; contatos=contatos->prox){
+    for(contatos=agenda; contatos!=NULL; contatos=contatos->prox) {
         
         printf("Nome: %s\n", contatos->nome);
     }
@@ -182,7 +186,7 @@ void imprime(Agenda *agenda){
     printf("\n\n\n");
 }
 
-Agenda *apaga_contato(Agenda *agenda){
+Agenda *apaga_contato(Agenda *agenda) {
 
     char nome[101];
 
@@ -195,13 +199,13 @@ Agenda *apaga_contato(Agenda *agenda){
 
     Agenda *aux = buscaRegistro(agenda, nome);
 
-    if(aux==NULL){
+    if(aux==NULL) {
     
         printf("\n\n!!! Não achou o registro solicitado.\n\n");
         return agenda;
     }
   
-    if(agenda==aux){
+    if(agenda==aux) {
         
         agenda = aux->prox;
     } else {
@@ -220,7 +224,7 @@ Agenda *apaga_contato(Agenda *agenda){
     return agenda;
 }
 
-void *busca(Agenda *agenda){
+void *busca(Agenda *agenda) {
 
     char nome[101];
 
@@ -234,9 +238,9 @@ void *busca(Agenda *agenda){
     Agenda *aux;
     int achou = 0;
     
-    for(aux=agenda; aux!=NULL; aux=aux->prox){
+    for(aux=agenda; aux!=NULL; aux=aux->prox) {
         
-        if(strcmp(aux->nome, nome)==0){
+        if(strcmp(aux->nome, nome)==0) {
          
             printf("\n\nACHOUU!!<o/ \n\nNome: %s\n",aux->nome);
             printf("Telefone: %s\n", aux->telefone);
@@ -247,27 +251,28 @@ void *busca(Agenda *agenda){
         }
     }
   
-    if(achou==0){
+    if(achou==0) {
         
         printf("\n\n !!! Não Foi Encontrado\n\n");
     }
 }
 
-
-Agenda *buscaRegistro(Agenda *agenda, char nome[]){
+Agenda *buscaRegistro(Agenda *agenda, char nome[]) {
   
     Agenda *aux;
-    for(aux=agenda; aux!=NULL; aux=aux->prox){
+    
+    for(aux=agenda; aux!=NULL; aux=aux->prox) {
         
-        if(strcmp(aux->nome, nome)==0)
-        return aux;
+        if(strcmp(aux->nome, nome)==0) {
+            return aux;
+        }
     }
     
     return NULL;
 }
 
 
-void libera(Agenda *agenda){
+void libera(Agenda *agenda) {
   
     Agenda *ag;
     Agenda *p=agenda; 
@@ -284,7 +289,7 @@ void libera(Agenda *agenda){
         printf("Falha!\n");
     } else {
       
-          for(ag=agenda; ag!=NULL; ag=ag->prox){
+          for(ag=agenda; ag!=NULL; ag=ag->prox) {
 
             fprintf(file,"%s\n", ag->nome);
             fprintf(file,"%s\n", ag->telefone);
@@ -296,7 +301,7 @@ void libera(Agenda *agenda){
     }
 
     
-    while(p!=NULL){
+    while(p!=NULL) {
         
         Agenda *ag = p->prox;
         free(p);
@@ -304,7 +309,7 @@ void libera(Agenda *agenda){
     }
 }
 
-int tamanho_lista(Agenda *agenda){
+int tamanho_lista(Agenda *agenda) {
   
     if(agenda==NULL) {
 
@@ -323,14 +328,14 @@ int tamanho_lista(Agenda *agenda){
     return cont;
 }
 
-char *mascaraTelefone(char telefone[], char formato[]){
+char *mascaraTelefone(char telefone[], char formato[]) {
   
     char aux[11];
     int i=0;
   
-    while(*telefone){
+    while(*telefone) {
         
-        if(formato[i] != '#'){
+        if(formato[i] != '#') {
             
             aux[i]=formato[i];
             i++;
