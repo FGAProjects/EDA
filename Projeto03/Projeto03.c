@@ -5,7 +5,7 @@
 struct registro{
 
     char nome_completo[101];
-    char telefone[10];
+    char telefone[11];
     char endereco[101];
     unsigned int cep;
     char data_nascimento[11];
@@ -78,8 +78,8 @@ Agenda *insere_txt_na_lista() {
     for(int aux = 0; aux < qtdeDolar; aux ++) {
 
         fscanf(file, "%[^\n]\n %[^\n]\n %[^\n]\n %d\n %[^\n]\n %[^\n]\n", 
-            nova_agenda[aux].nome_completo, 
-            nova_agenda[aux].telefone, 
+            nova_agenda[aux].nome_completo,
+            nova_agenda[aux].telefone,
             nova_agenda[aux].endereco,
             &nova_agenda[aux].cep,
             nova_agenda[aux].data_nascimento,
@@ -254,6 +254,11 @@ void imprime(Agenda *agenda) {
     for(contatos=agenda; contatos!=NULL; contatos=contatos->prox) {
         
         printf("Nome: %s\n", contatos->nome_completo);
+        printf("Telefone %s\n", contatos->telefone);
+        printf("Endereco: %s\n", contatos->endereco);
+        printf("CEP: %d\n", contatos->cep);
+        printf("data_nascimento: %s\n", contatos->data_nascimento);
+        printf("\n");
     }
 
     printf("\n\n\n");
