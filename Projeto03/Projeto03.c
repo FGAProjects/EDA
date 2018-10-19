@@ -207,7 +207,8 @@ Agenda *insere(Agenda *agenda) {
     scanf("%[^\n]", nome);
 
     printf("Numero de telefone:  ");
-    scanf("%s", telefone);
+    getchar();
+    scanf("%[^\n]", telefone);
     fflush ( stdin );
   
     printf("Endereco:  ");
@@ -216,16 +217,16 @@ Agenda *insere(Agenda *agenda) {
   
     printf("CEP:  ");
     scanf("%d", &cep);
-  
+    
     printf("Data de nascimento:  ");
     scanf("%s", dataNascimento);
   
     strcpy(novo->nome_completo,nome);
-    strcpy(novo->telefone,telefone);
     strcpy(novo->endereco,endereco);
     novo->cep=cep;
-  
-    strcpy(novo->data_nascimento,dataNascimento); 
+    strcpy(novo->data_nascimento,dataNascimento);
+    strcpy(novo->telefone,mascaraTelefone(telefone,"#####-####"));
+ 
     novo->prox = agenda;
     novo->ant = NULL;
 
@@ -254,7 +255,7 @@ void imprime(Agenda *agenda) {
     for(contatos=agenda; contatos!=NULL; contatos=contatos->prox) {
         
         printf("Nome: %s\n", contatos->nome_completo);
-        printf("Telefone %s\n", contatos->telefone);
+        printf("Telefone: %s\n", contatos->telefone);
         printf("Endereco: %s\n", contatos->endereco);
         printf("CEP: %d\n", contatos->cep);
         printf("data_nascimento: %s\n", contatos->data_nascimento);
