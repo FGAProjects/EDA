@@ -14,7 +14,7 @@ struct registro{
 };
 typedef struct registro Agenda;
 
-char *mascaraTelefone(char telefone[], char formato[]);
+char *mascara(char telefone[], char formato[]);
 
 int vazia(Agenda *agenda);
 int menu();
@@ -224,8 +224,8 @@ Agenda *insere(Agenda *agenda) {
     strcpy(novo->nome_completo,nome);
     strcpy(novo->endereco,endereco);
     novo->cep=cep;
-    strcpy(novo->data_nascimento,dataNascimento);
-    strcpy(novo->telefone,mascaraTelefone(telefone,"#####-####"));
+    strcpy(novo->data_nascimento,mascara(dataNascimento,"##/##/####"));
+    strcpy(novo->telefone,mascara(telefone,"#####-####"));
  
     novo->prox = agenda;
     novo->ant = NULL;
@@ -255,11 +255,6 @@ void imprime(Agenda *agenda) {
     for(contatos=agenda; contatos!=NULL; contatos=contatos->prox) {
         
         printf("Nome: %s\n", contatos->nome_completo);
-        printf("Telefone: %s\n", contatos->telefone);
-        printf("Endereco: %s\n", contatos->endereco);
-        printf("CEP: %d\n", contatos->cep);
-        printf("data_nascimento: %s\n", contatos->data_nascimento);
-        printf("\n");
     }
 
     printf("\n\n\n");
@@ -385,7 +380,7 @@ void libera(Agenda *agenda) {
     }
 }
 
-char *mascaraTelefone(char telefone[], char formato[]) {
+char *mascara(char telefone[], char formato[]) {
   
     char aux[11];
     int i=0;
