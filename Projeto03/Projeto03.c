@@ -143,8 +143,6 @@ int main(){
 
             switch(opt) {
 
-
-
                 case 0:
 
                     libera(agenda);
@@ -416,24 +414,21 @@ char *mascara(char telefone[], char formato[]) {
     return telefone;
 }
 
-char nome_completo[101];
-char telefone[11];
-char endereco[101];
-unsigned int cep;
-char data_nascimento[11];
-
-
-void ordena(Agenda *Ordena){
+void ordena(Agenda *Ordena) {
+    
     Agenda *actual, *aux;
     Agenda current;
-    for(actual = Ordena->prox; actual != NULL; actual = actual->prox){
+
+    for(actual = Ordena->prox; actual != NULL; actual = actual->prox) {
+
         strcpy(current.nome_completo, actual->nome_completo);
         strcpy(current.telefone, actual->telefone);
         strcpy(current.endereco, actual->endereco);
         strcpy(current.data_nascimento, actual->data_nascimento);
         current.cep = actual->cep;
         aux = actual->ant;
-        while(aux != NULL && strcmp(aux->nome_completo, current.nome_completo) > 0){
+
+        while(aux != NULL && strcmp(aux->nome_completo, current.nome_completo) > 0) {
             strcpy(aux->prox->nome_completo, aux->nome_completo);
             strcpy(aux->prox->telefone, aux->telefone);
             strcpy(aux->prox->endereco, aux->endereco);
@@ -442,13 +437,15 @@ void ordena(Agenda *Ordena){
 
             aux = aux->ant;
         }
-        if(aux == NULL){
+        if(aux == NULL) {
+
             strcpy(Ordena->nome_completo, current.nome_completo);
             strcpy(Ordena->telefone, current.telefone);
             strcpy(Ordena->endereco, current.endereco);
             strcpy(Ordena->data_nascimento, current.data_nascimento);
             Ordena->cep = current.cep;
-        } else{
+        } else {
+
             strcpy(aux->prox->nome_completo, current.nome_completo);
             strcpy(aux->prox->telefone, current.telefone);
             strcpy(aux->prox->endereco, current.endereco);
