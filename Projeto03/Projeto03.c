@@ -5,7 +5,7 @@
 struct registro{
 
     char nome_completo[101];
-    char telefone[10];
+    char telefone[11];
     char endereco[101];
     unsigned int cep;
     char data_nascimento[11];
@@ -14,22 +14,24 @@ struct registro{
 };
 typedef struct registro Agenda;
 
-char *mascaraTelefone(char telefone[], char formato[]);
+char *mascara(char telefone[], char formato[]);
 
 int vazia(Agenda *agenda);
 int menu();
 int tamanho_lista(Agenda *agenda);
+void ordena(Agenda *Ordena);
 
 void imprime(Agenda *agenda);
 void libera(Agenda *agenda);
 void *busca(Agenda *agenda);
-void insertionSort(Agenda** lista, int qtdeDolar);
+
 
 Agenda *insere_txt_na_lista();
 Agenda *inicializa();
 Agenda *insere(Agenda *agenda);
 Agenda *apaga_contato(Agenda *agenda);
 Agenda *buscaRegistro(Agenda *agenda, char nome[]);
+Agenda *OrdenaCod(Agenda *Ordena);
 
 int vazia(Agenda *agenda) {
 
@@ -90,8 +92,6 @@ Agenda *insere_txt_na_lista() {
     fclose(file);
 
 
-
-
     for(int aux = 0; aux < qtdeDolar; aux ++) {
 
         agenda = malloc(sizeof(Agenda));
@@ -102,50 +102,23 @@ Agenda *insere_txt_na_lista() {
         agenda->cep = nova_agenda[aux].cep;
         strcpy(agenda->data_nascimento,nova_agenda[aux].data_nascimento);
         agenda->prox = NULL;
+        agenda->ant = NULL;
 
         if(aux == 0) {
 
             lista = agenda;
         } else {
-
+            agenda->ant = anterior;
             anterior->prox = agenda;
         }
 
         anterior = agenda;
     }
 
-    insertionSort(lista,qtdeDolar);
-
 
 
     return lista;
-
 }
-
-void insertionSort(Agenda** lista, int qtdeDolar){
-
-    int i,j;
-    Agenda* ordem;
-
-    for(int i = 0; i < qtdeDolar; i++){
-        ordem = lista[i];
-
-        while(j >= 0 && strcmp(lista[j]->nome_completo, ordem->nome_completo) > 0)
-		{
-
-			lista[j+1] = lista[j];
-			j--;
-
-		}
-
-		lista[j+1] = ordem;
-
-	}
-
-}
-
-
-
 
 int main(){
 
@@ -165,6 +138,8 @@ int main(){
         do {
 
             opt = menu();
+
+            ordena(agenda);
 
             switch(opt) {
 
@@ -191,6 +166,7 @@ int main(){
                 default:
                     printf("Digite uma opcao valida (:\n\n");
             }
+
         } while(opt);
 
         return 0;
@@ -241,7 +217,8 @@ Agenda *insere(Agenda *agenda) {
     scanf("%[^\n]", nome);
 
     printf("Numero de telefone:  ");
-    scanf("%s", telefone);
+    getchar();
+    scanf("%[^\n]", telefone);
     fflush ( stdin );
 
     printf("Endereco:  ");
@@ -255,11 +232,10 @@ Agenda *insere(Agenda *agenda) {
     scanf("%s", dataNascimento);
 
     strcpy(novo->nome_completo,nome);
-    strcpy(novo->telefone,telefone);
     strcpy(novo->endereco,endereco);
     novo->cep=cep;
-
-    strcpy(novo->data_nascimento,dataNascimento);
+    strcpy(novo->data_nascimento,mascara(dataNascimento,"##/##/####"));
+    strcpy(novo->telefone,mascara(telefone,"#####-####"));
     novo->prox = agenda;
     novo->ant = NULL;
 
@@ -284,6 +260,7 @@ void imprime(Agenda *agenda) {
 
         printf("\n\nVisualizar registros:\n");
     }
+
 
     for(contatos=agenda; contatos!=NULL; contatos=contatos->prox) {
 
@@ -347,9 +324,9 @@ void *busca(Agenda *agenda) {
 
     for(aux=agenda; aux!=NULL; aux=aux->prox) {
 
-        if(strcmp(aux->nome_completo, nome)==0) {
+        if(strstr(aux->nome_completo, nome)!=NULL) {
 
-            printf("\n\nACHOUU!!<o/ \n\nNome: %s\n",aux->nome_completo);
+            printf("Nome: %s\n",aux->nome_completo);
             printf("Telefone: %s\n", aux->telefone);
             printf("Endereco: %s\n", aux->endereco);
             printf("CEP: %d\n",aux->cep);
@@ -365,11 +342,10 @@ void *busca(Agenda *agenda) {
 }
 
 Agenda *buscaRegistro(Agenda *agenda, char nome[]) {
-
     Agenda *aux;
     for(aux=agenda; aux!=NULL; aux=aux->prox) {
 
-        if(strcmp(aux->nome_completo, nome)==0)
+        if(strstr(nome, aux->nome_completo)!=NULL)
         return aux;
     }
 
@@ -413,7 +389,7 @@ void libera(Agenda *agenda) {
     }
 }
 
-char *mascaraTelefone(char telefone[], char formato[]) {
+char *mascara(char telefone[], char formato[]) {
 
     char aux[11];
     int i=0;
@@ -436,4 +412,45 @@ char *mascaraTelefone(char telefone[], char formato[]) {
 
     strcpy(telefone, aux);
     return telefone;
+}
+
+void ordena(Agenda *Ordena) {
+    
+    Agenda *actual, *aux;
+    Agenda current;
+
+    for(actual = Ordena->prox; actual != NULL; actual = actual->prox) {
+
+        strcpy(current.nome_completo, actual->nome_completo);
+        strcpy(current.telefone, actual->telefone);
+        strcpy(current.endereco, actual->endereco);
+        strcpy(current.data_nascimento, actual->data_nascimento);
+        current.cep = actual->cep;
+        aux = actual->ant;
+
+        while(aux != NULL && strcmp(aux->nome_completo, current.nome_completo) > 0) {
+            strcpy(aux->prox->nome_completo, aux->nome_completo);
+            strcpy(aux->prox->telefone, aux->telefone);
+            strcpy(aux->prox->endereco, aux->endereco);
+            strcpy(aux->prox->data_nascimento, aux->data_nascimento);
+            aux->prox->cep = aux->cep;
+
+            aux = aux->ant;
+        }
+        if(aux == NULL) {
+
+            strcpy(Ordena->nome_completo, current.nome_completo);
+            strcpy(Ordena->telefone, current.telefone);
+            strcpy(Ordena->endereco, current.endereco);
+            strcpy(Ordena->data_nascimento, current.data_nascimento);
+            Ordena->cep = current.cep;
+        } else {
+
+            strcpy(aux->prox->nome_completo, current.nome_completo);
+            strcpy(aux->prox->telefone, current.telefone);
+            strcpy(aux->prox->endereco, current.endereco);
+            strcpy(aux->prox->data_nascimento, current.data_nascimento);
+            aux->prox->cep = current.cep;
+        }
+    }
 }
