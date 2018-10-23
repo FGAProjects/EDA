@@ -19,6 +19,7 @@ char *mascaraTelefone(char telefone[], char formato[]);
 int vazia(Agenda *agenda);
 int menu();
 int tamanho_lista(Agenda *agenda);
+void ordena(Agenda *Ordena);
 
 void imprime(Agenda *agenda);
 void libera(Agenda *agenda);
@@ -31,7 +32,7 @@ Agenda *apaga_contato(Agenda *agenda);
 Agenda *buscaRegistro(Agenda *agenda, char nome[]);
 
 int vazia(Agenda *agenda) {
-  
+
     if(agenda->prox==NULL) {
         return 1;
     } else {
@@ -51,24 +52,24 @@ Agenda *insere_txt_na_lista() {
     Agenda *agenda = NULL;
     Agenda *lista = NULL;
     Agenda *anterior = NULL;
-    
+
     file = fopen(arquivo, "r");
 
     if(file==NULL) {
-        
+
         printf("Falha!\n");
     } else {
 
         while((caracteres=fgetc(file))!=EOF) {
-            
+
             if(caracteres=='\n'){
-            
+
                 qtdeLinhas++;
             } if(caracteres=='$') {
 
                 qtdeDolar++;
             }
-        }       
+        }
     }
 
     rewind(file);
@@ -77,7 +78,7 @@ Agenda *insere_txt_na_lista() {
 
     for(int aux = 0; aux < qtdeDolar; aux ++) {
 
-        fscanf(file, "%[^\n]\n %[^\n]\n %[^\n]\n %d\n %[^\n]\n %[^\n]\n", 
+        fscanf(file, "%[^\n]\n %[^\n]\n %[^\n]\n %d\n %[^\n]\n %[^\n]\n",
             nova_agenda[aux].nome_completo,
             nova_agenda[aux].telefone,
             nova_agenda[aux].endereco,
@@ -98,13 +99,14 @@ Agenda *insere_txt_na_lista() {
         agenda->cep = nova_agenda[aux].cep;
         strcpy(agenda->data_nascimento,nova_agenda[aux].data_nascimento);
         agenda->prox = NULL;
-        
+        agenda->ant = NULL;
+
         if(aux == 0) {
 
             lista = agenda;
         } else {
-
-            anterior->prox = agenda; 
+            agenda->ant = anterior;
+            anterior->prox = agenda;
         }
 
         anterior = agenda;
@@ -132,10 +134,12 @@ int main(){
 
             opt = menu();
 
+            ordena(agenda);
+
             switch(opt) {
 
                 case 0:
-              
+
                     libera(agenda);
                     break;
                 case 1:
@@ -143,7 +147,7 @@ int main(){
                     agenda = insere(agenda);
                     break;
                 case 2:
-              
+
                     agenda = apaga_contato(agenda);
                     break;
                 case 3:
@@ -151,7 +155,7 @@ int main(){
                     busca(agenda);
                     break;
                 case 4:
-                    
+
                     imprime(agenda);
                     break;
                 default:
@@ -183,7 +187,7 @@ int menu() {
 }
 
 Agenda *inicializa() {
-  
+
     return NULL;
 }
 
@@ -210,28 +214,28 @@ Agenda *insere(Agenda *agenda) {
     getchar();
     scanf("%[^\n]", telefone);
     fflush ( stdin );
-  
+
     printf("Endereco:  ");
     getchar();
     scanf("%[^\n]", endereco);
-  
+
     printf("CEP:  ");
     scanf("%d", &cep);
-    
+
     printf("Data de nascimento:  ");
     scanf("%s", dataNascimento);
-  
+
     strcpy(novo->nome_completo,nome);
     strcpy(novo->endereco,endereco);
     novo->cep=cep;
     strcpy(novo->data_nascimento,dataNascimento);
     strcpy(novo->telefone,mascaraTelefone(telefone,"#####-####"));
- 
+
     novo->prox = agenda;
     novo->ant = NULL;
 
     if(agenda!=NULL){
-    
+
         agenda->ant=novo;
     }
 
@@ -245,15 +249,14 @@ void imprime(Agenda *agenda) {
     Agenda *contatos;
 
     if(agenda==NULL) {
-        
+
         printf("\n\nNão possui nenhum registro :(\n");
     } else {
 
-        printf("\n\nVisualizar registros:\n");    
+        printf("\n\nVisualizar registros:\n");
     }
-    
+
     for(contatos=agenda; contatos!=NULL; contatos=contatos->prox) {
-        
         printf("Nome: %s\n", contatos->nome_completo);
         printf("Telefone: %s\n", contatos->telefone);
         printf("Endereco: %s\n", contatos->endereco);
@@ -279,24 +282,24 @@ Agenda *apaga_contato(Agenda *agenda) {
     Agenda *aux = buscaRegistro(agenda, nome);
 
     if(aux==NULL) {
-    
+
         printf("\n\n!!! Não achou o registro solicitado.\n\n");
         return agenda;
     }
-  
+
     if(agenda==aux) {
-        
+
         agenda = aux->prox;
     } else {
-    
+
         aux->ant->prox = aux->prox;
     }
 
     if(aux->prox != NULL) {
-    
+
        aux->prox->ant=aux->ant;
     }
-    
+
     printf("\nRegistro removido!\n\n");
 
     free(aux);
@@ -316,11 +319,11 @@ void *busca(Agenda *agenda) {
 
     Agenda *aux;
     int achou = 0;
-    
+
     for(aux=agenda; aux!=NULL; aux=aux->prox) {
-        
-        if(strcmp(aux->nome_completo, nome)==0) {
-         
+
+        if(strstr(aux->nome_completo, nome)!=NULL) {
+
             printf("\n\nACHOUU!!<o/ \n\nNome: %s\n",aux->nome_completo);
             printf("Telefone: %s\n", aux->telefone);
             printf("Endereco: %s\n", aux->endereco);
@@ -329,43 +332,42 @@ void *busca(Agenda *agenda) {
             achou = 1;
         }
     }
-  
+
     if(achou==0) {
-        
+
         printf("\n\n !!! Não Foi Encontrado\n\n");
     }
 }
 
 Agenda *buscaRegistro(Agenda *agenda, char nome[]) {
-  
     Agenda *aux;
     for(aux=agenda; aux!=NULL; aux=aux->prox) {
-        
-        if(strcmp(aux->nome_completo, nome)==0)
+
+        if(strstr(nome, aux->nome_completo)!=NULL)
         return aux;
     }
-    
+
     return NULL;
 }
 
 
 void libera(Agenda *agenda) {
-  
+
     Agenda *ag;
-    Agenda *p=agenda; 
+    Agenda *p=agenda;
 
     char arquivo [] = "contatos.txt";
     FILE *file;
-  
+
     file = fopen(arquivo, "w");
     char dolar[2];
-  
+
     strcpy(dolar,"$");
     if(file==NULL) {
-      
+
         printf("Falha!\n");
     } else {
-      
+
           for(ag=agenda; ag!=NULL; ag=ag->prox) {
 
             fprintf(file,"%s\n", ag->nome_completo);
@@ -378,7 +380,7 @@ void libera(Agenda *agenda) {
     }
 
     while(p!=NULL) {
-        
+
         Agenda *ag = p->prox;
         free(p);
         p=ag;
@@ -386,26 +388,68 @@ void libera(Agenda *agenda) {
 }
 
 char *mascaraTelefone(char telefone[], char formato[]) {
-  
+
     char aux[11];
     int i=0;
-  
+
     while(*telefone) {
-        
+
         if(formato[i] != '#') {
-            
+
             aux[i]=formato[i];
             i++;
         } else {
-            
+
             aux[i]=*telefone;
             telefone++;
             i++;
         }
     }
-  
+
     aux[i]=0;
-  
+
     strcpy(telefone, aux);
     return telefone;
+}
+
+char nome_completo[101];
+char telefone[11];
+char endereco[101];
+unsigned int cep;
+char data_nascimento[11];
+
+
+void ordena(Agenda *Ordena){
+    Agenda *actual, *aux;
+    Agenda current;
+    for(actual = Ordena->prox; actual != NULL; actual = actual->prox){
+        strcpy(current.nome_completo, actual->nome_completo);
+        strcpy(current.telefone, actual->telefone);
+        strcpy(current.endereco, actual->endereco);
+        strcpy(current.data_nascimento, actual->data_nascimento);
+        current.cep = actual->cep;
+        aux = actual->ant;
+        while(aux != NULL && strcmp(aux->nome_completo, current.nome_completo) > 0){
+            strcpy(aux->prox->nome_completo, aux->nome_completo);
+            strcpy(aux->prox->telefone, aux->telefone);
+            strcpy(aux->prox->endereco, aux->endereco);
+            strcpy(aux->prox->data_nascimento, aux->data_nascimento);
+            aux->prox->cep = aux->cep;
+
+            aux = aux->ant;
+        }
+        if(aux == NULL){
+            strcpy(Ordena->nome_completo, current.nome_completo);
+            strcpy(Ordena->telefone, current.telefone);
+            strcpy(Ordena->endereco, current.endereco);
+            strcpy(Ordena->data_nascimento, current.data_nascimento);
+            Ordena->cep = current.cep;
+        } else{
+            strcpy(aux->prox->nome_completo, current.nome_completo);
+            strcpy(aux->prox->telefone, current.telefone);
+            strcpy(aux->prox->endereco, current.endereco);
+            strcpy(aux->prox->data_nascimento, current.data_nascimento);
+            aux->prox->cep = current.cep;
+        }
+    }
 }
