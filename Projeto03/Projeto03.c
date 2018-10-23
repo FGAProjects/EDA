@@ -14,7 +14,7 @@ struct registro{
 };
 typedef struct registro Agenda;
 
-char *mascaraTelefone(char telefone[], char formato[]);
+char *mascara(char telefone[], char formato[]);
 
 int vazia(Agenda *agenda);
 int menu();
@@ -25,11 +25,13 @@ void imprime(Agenda *agenda);
 void libera(Agenda *agenda);
 void *busca(Agenda *agenda);
 
+
 Agenda *insere_txt_na_lista();
 Agenda *inicializa();
 Agenda *insere(Agenda *agenda);
 Agenda *apaga_contato(Agenda *agenda);
 Agenda *buscaRegistro(Agenda *agenda, char nome[]);
+Agenda *OrdenaCod(Agenda *Ordena);
 
 int vazia(Agenda *agenda) {
 
@@ -89,6 +91,7 @@ Agenda *insere_txt_na_lista() {
 
     fclose(file);
 
+
     for(int aux = 0; aux < qtdeDolar; aux ++) {
 
         agenda = malloc(sizeof(Agenda));
@@ -111,6 +114,8 @@ Agenda *insere_txt_na_lista() {
 
         anterior = agenda;
     }
+
+
 
     return lista;
 }
@@ -138,6 +143,8 @@ int main(){
 
             switch(opt) {
 
+
+
                 case 0:
 
                     libera(agenda);
@@ -161,6 +168,7 @@ int main(){
                 default:
                     printf("Digite uma opcao valida (:\n\n");
             }
+
         } while(opt);
 
         return 0;
@@ -228,9 +236,8 @@ Agenda *insere(Agenda *agenda) {
     strcpy(novo->nome_completo,nome);
     strcpy(novo->endereco,endereco);
     novo->cep=cep;
-    strcpy(novo->data_nascimento,dataNascimento);
-    strcpy(novo->telefone,mascaraTelefone(telefone,"#####-####"));
-
+    strcpy(novo->data_nascimento,mascara(dataNascimento,"##/##/####"));
+    strcpy(novo->telefone,mascara(telefone,"#####-####"));
     novo->prox = agenda;
     novo->ant = NULL;
 
@@ -256,13 +263,10 @@ void imprime(Agenda *agenda) {
         printf("\n\nVisualizar registros:\n");
     }
 
+
     for(contatos=agenda; contatos!=NULL; contatos=contatos->prox) {
+
         printf("Nome: %s\n", contatos->nome_completo);
-        printf("Telefone: %s\n", contatos->telefone);
-        printf("Endereco: %s\n", contatos->endereco);
-        printf("CEP: %d\n", contatos->cep);
-        printf("data_nascimento: %s\n", contatos->data_nascimento);
-        printf("\n");
     }
 
     printf("\n\n\n");
@@ -324,7 +328,7 @@ void *busca(Agenda *agenda) {
 
         if(strstr(aux->nome_completo, nome)!=NULL) {
 
-            printf("\n\nACHOUU!!<o/ \n\nNome: %s\n",aux->nome_completo);
+            printf("Nome: %s\n",aux->nome_completo);
             printf("Telefone: %s\n", aux->telefone);
             printf("Endereco: %s\n", aux->endereco);
             printf("CEP: %d\n",aux->cep);
@@ -387,7 +391,7 @@ void libera(Agenda *agenda) {
     }
 }
 
-char *mascaraTelefone(char telefone[], char formato[]) {
+char *mascara(char telefone[], char formato[]) {
 
     char aux[11];
     int i=0;
