@@ -13,6 +13,7 @@ struct aviao {
  	int combustivel;
  	char status[MAXIMO_DE_CARACTERES];
  	char tipo_de_operacao[TIPO_DE_OPERACAO];
+ 	int prioridade;
  	struct aviao* prox;
 };
 typedef struct aviao Aviao;
@@ -40,6 +41,7 @@ int vazia (Fila* fila) {
 Aviao* ins_fim (Aviao* final, char codigo[CODIGO_AVIAO],int combustivel,int numero_aleatorio) {
 
  	Aviao* novo = (Aviao*) malloc(sizeof(Aviao));
+ 	int contador = 0;
 
  	if (numero_aleatorio == 65) {
 
@@ -50,7 +52,20 @@ Aviao* ins_fim (Aviao* final, char codigo[CODIGO_AVIAO],int combustivel,int nume
  	}
 
  	strcpy(novo->codigo,codigo);
- 	novo->combustivel = combustivel;
+ 	
+ 	if(strcmp(novo->tipo_de_operacao,"A") == 0) {
+ 		
+ 		novo->combustivel = combustivel;
+ 	} else {
+
+ 		//Nada a fazer
+ 	}
+
+ 	if((strcmp(novo->tipo_de_operacao,"A") == 0) && novo->combustivel == 0) {
+
+ 		novo->prioridade = 0;
+ 	} 
+
  	novo->prox = NULL;
 
  	if (final != NULL) {
@@ -70,7 +85,7 @@ Aviao* retira_inicio (Aviao* inicio) {
  	return aviao;
 }
 
-void push (Fila* fila, char codigo[CODIGO_AVIAO],int combustivel,int numero_aleatorio) {
+Fila* push (Fila* fila, char codigo[CODIGO_AVIAO],int combustivel,int numero_aleatorio) {
 
  	fila->final = ins_fim(fila->final,codigo,combustivel,numero_aleatorio);
 
@@ -78,6 +93,8 @@ void push (Fila* fila, char codigo[CODIGO_AVIAO],int combustivel,int numero_alea
 
  		fila->inicio = fila->final;
 	}
+
+	return fila;
 }
 
 void pop (Fila* fila) {
@@ -156,6 +173,22 @@ int gerar_numero_char(int numero) {
 	return numero;
 }
 
+Fila* ordena(Fila* fila) {
+
+	Aviao* aviao;
+	Fila* anterior = NULL;
+	Fila* p = fila;
+	aviao = p->inicio;
+
+	for (aviao=fila->inicio; aviao!= NULL; aviao = aviao->prox) { 
+
+		if(aviao->prioridade == 0) {
+
+			
+		}
+	}	
+}
+
 void imprime (Fila* fila,int nVoos,int nAproximacoes,int nDecolagens) {
 
  	Aviao* aviao;
@@ -171,7 +204,7 @@ void imprime (Fila* fila,int nVoos,int nAproximacoes,int nDecolagens) {
 	now = time(NULL);
 	now_tm = localtime(&now);
 
- 	printf("--------------------------------------------------------------------------------\n");
+ 	/*printf("--------------------------------------------------------------------------------\n");
  	printf("Aeroporto Internacional de Brasília\n");
  	printf("Hora Inicial: %s\n",__TIME__);
  	printf("Fila de Pedidos: \n");
@@ -243,7 +276,7 @@ void imprime (Fila* fila,int nVoos,int nAproximacoes,int nDecolagens) {
 
 	    	contador_de_pista = 0;
 	    }
-	}
+	}*/
 }
 
 int main () {
@@ -277,13 +310,14 @@ int main () {
 
 			numero_aleatorio = gerar_numero_char(gerar_numero(65,68));
 			combustivelA = gerar_numero(0,12);
-			push(fila,codigo,combustivelA,numero_aleatorio);
+			fila = push(fila,codigo,combustivelA,numero_aleatorio);
 		}
 	}
 
 	fclose(file);
 
- 	imprime(fila,nVoos,nAproximacoes,nDecolagens);
+	ordena(fila);
+ 	//imprime(fila,nVoos,nAproximacoes,nDecolagens);
  	libera(fila);
 
  	return 0;
