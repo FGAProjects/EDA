@@ -52,19 +52,21 @@ Aviao* ins_fim (Aviao* final, char codigo[CODIGO_AVIAO],int combustivel,int nume
  	}
 
  	strcpy(novo->codigo,codigo);
- 	
+ 	novo->combustivel = combustivel;
+
  	if(strcmp(novo->tipo_de_operacao,"A") == 0) {
  		
- 		novo->combustivel = combustivel;
+ 		if(novo->combustivel == 0) {
+
+ 			novo->prioridade = 0;		
+ 		} else {
+
+ 			novo->prioridade = 1;
+ 		}	
  	} else {
 
- 		//Nada a fazer
+ 		novo->prioridade = 1;
  	}
-
- 	if((strcmp(novo->tipo_de_operacao,"A") == 0) && novo->combustivel == 0) {
-
- 		novo->prioridade = 0;
- 	} 
 
  	novo->prox = NULL;
 
@@ -85,7 +87,7 @@ Aviao* retira_inicio (Aviao* inicio) {
  	return aviao;
 }
 
-Fila* push (Fila* fila, char codigo[CODIGO_AVIAO],int combustivel,int numero_aleatorio) {
+Fila* push (Fila* fila,char codigo[CODIGO_AVIAO],int combustivel,int numero_aleatorio) {
 
  	fila->final = ins_fim(fila->final,codigo,combustivel,numero_aleatorio);
 
@@ -178,15 +180,13 @@ Fila* ordena(Fila* fila) {
 	Aviao* aviao;
 	Fila* anterior = NULL;
 	Fila* p = fila;
-	aviao = p->inicio;
 
-	for (aviao=fila->inicio; aviao!= NULL; aviao = aviao->prox) { 
+	for (aviao=fila->inicio; aviao!= NULL; aviao=aviao->prox) {
 
-		if(aviao->prioridade == 0) {
-
-			
-		}
-	}	
+		printf("tipo_de_operacao: %s\n", aviao->tipo_de_operacao);
+		printf("prioridade: %d\n", aviao->prioridade);
+		printf("combustivel: %d\n", aviao->combustivel);
+	}
 }
 
 void imprime (Fila* fila,int nVoos,int nAproximacoes,int nDecolagens) {
@@ -203,6 +203,11 @@ void imprime (Fila* fila,int nVoos,int nAproximacoes,int nDecolagens) {
 
 	now = time(NULL);
 	now_tm = localtime(&now);
+
+	for (aviao=fila->inicio; aviao!= NULL; aviao=aviao->prox) {
+
+		printf("%d\n", aviao->combustivel);
+	}
 
  	/*printf("--------------------------------------------------------------------------------\n");
  	printf("Aeroporto Internacional de Brasília\n");
