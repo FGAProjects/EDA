@@ -87,7 +87,7 @@ Aviao* retira_inicio (Aviao* inicio) {
  	return aviao;
 }
 
-Fila* push (Fila* fila,char codigo[CODIGO_AVIAO],int combustivel,int numero_aleatorio) {
+void push (Fila* fila,char codigo[CODIGO_AVIAO],int combustivel,int numero_aleatorio) {
 
  	fila->final = ins_fim(fila->final,codigo,combustivel,numero_aleatorio);
 
@@ -95,8 +95,6 @@ Fila* push (Fila* fila,char codigo[CODIGO_AVIAO],int combustivel,int numero_alea
 
  		fila->inicio = fila->final;
 	}
-
-	return fila;
 }
 
 void pop (Fila* fila) {
@@ -175,20 +173,6 @@ int gerar_numero_char(int numero) {
 	return numero;
 }
 
-Fila* ordena(Fila* fila) {
-
-	Aviao* aviao;
-	Fila* anterior = NULL;
-	Fila* p = fila;
-
-	for (aviao=fila->inicio; aviao!= NULL; aviao=aviao->prox) {
-
-		printf("tipo_de_operacao: %s\n", aviao->tipo_de_operacao);
-		printf("prioridade: %d\n", aviao->prioridade);
-		printf("combustivel: %d\n", aviao->combustivel);
-	}
-}
-
 void imprime (Fila* fila,int nVoos,int nAproximacoes,int nDecolagens) {
 
  	Aviao* aviao;
@@ -200,13 +184,57 @@ void imprime (Fila* fila,int nVoos,int nAproximacoes,int nDecolagens) {
 	int hora_atual = 0;
 	int minuto_atual = 0;
 	int contador_de_pista = 0;
+	int contador = 0;
+	int interador = 0;
 
 	now = time(NULL);
 	now_tm = localtime(&now);
+	now_tm = add_unidade_de_tempo(now_tm, interador);
 
-	for (aviao=fila->inicio; aviao!= NULL; aviao=aviao->prox) {
+	printf("--------------------------------------------------------------------------------\n");
+ 	printf("Aeroporto Internacional de Brasília\n");
+ 	printf("Hora Inicial: %s\n",__TIME__);
+ 	printf("Fila de Pedidos: \n");
+ 	printf("NVoos: %d\n",nVoos);
+ 	printf("Naproximacoes: %d\n",nAproximacoes);
+ 	printf("NDecolagens: %d\n",nDecolagens);
+ 	printf("--------------------------------------------------------------------------------\n");
+ 	printf("Listagem de eventos\n\n");
 
-		printf("%d\n", aviao->combustivel);
+ 	
+ 	for (aviao=fila->inicio; aviao!= NULL; aviao=aviao->prox) {
+	     		
+ 		hora_atual = now_tm->tm_hour;
+	    minuto_atual = now_tm->tm_min;
+ 		numero_pista = gerar_numero(1,3);
+	    printf("Código do voo: %s\n", aviao->codigo);
+
+	    if (strcmp(aviao->tipo_de_operacao,"D") == 0) {
+
+	    	printf("Status: [aeronave decolou]\n");	
+	    } else {
+
+	    	printf("Status: [aeronave pousou]\n");
+	    }
+		
+		contador ++;
+
+		if(contador == 3) {
+	    	
+			interador ++;
+			now_tm = add_unidade_de_tempo(now_tm, interador);
+			aviao->combustivel --;
+			interador = 0;
+			contador = 0;
+		}
+
+		printf("Horário do início do procedimento: %d:%d \n", hora_atual, minuto_atual);
+		printf("Número da pista: %d\n\n", numero_pista);
+
+		// if(numero_pista == 3) {
+
+		// 	contador_de_pista ++;
+		// }
 	}
 
  	/*printf("--------------------------------------------------------------------------------\n");
@@ -315,14 +343,13 @@ int main () {
 
 			numero_aleatorio = gerar_numero_char(gerar_numero(65,68));
 			combustivelA = gerar_numero(0,12);
-			fila = push(fila,codigo,combustivelA,numero_aleatorio);
+			push(fila,codigo,combustivelA,numero_aleatorio);
 		}
 	}
 
 	fclose(file);
 
-	ordena(fila);
- 	//imprime(fila,nVoos,nAproximacoes,nDecolagens);
+ 	imprime(fila,nVoos,nAproximacoes,nDecolagens);
  	libera(fila);
 
  	return 0;
