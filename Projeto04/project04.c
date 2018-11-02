@@ -46,9 +46,11 @@ Aviao* ins_fim (Aviao* final, char codigo[CODIGO_AVIAO],int combustivel,int nume
  	if (numero_aleatorio == 65) {
 
  		strcpy(novo->tipo_de_operacao,"A");
+ 		strcpy(novo->status,"decolou");
  	} else {
 
  		strcpy(novo->tipo_de_operacao,"D");
+ 		strcpy(novo->status,"pousou");
  	}
 
  	strcpy(novo->codigo,codigo);
@@ -152,7 +154,6 @@ struct tm* add_unidade_de_tempo(struct tm *now_tm, int qnt){
 
 int gerar_numero(int limite_inferior, int limite_superior){
 
-
 	int result = 0;
 
 	for (int aux = 0; aux < 1; aux ++) {
@@ -179,13 +180,14 @@ void imprime (Fila* fila,int nVoos,int nAproximacoes,int nDecolagens) {
  	char procedimento[TIPO_DE_OPERACAO];
 	time_t now;
 	struct tm *now_tm;
-	int numero_pista = 0;
+	int numero_pista;
 	int contador_critico = 0;
 	int hora_atual = 0;
 	int minuto_atual = 0;
 	int contador_de_pista = 0;
 	int contador = 0;
 	int interador = 0;
+	int repeticaoA = 0;
 
 	now = time(NULL);
 	now_tm = localtime(&now);
@@ -200,23 +202,20 @@ void imprime (Fila* fila,int nVoos,int nAproximacoes,int nDecolagens) {
  	printf("NDecolagens: %d\n",nDecolagens);
  	printf("--------------------------------------------------------------------------------\n");
  	printf("Listagem de eventos\n\n");
-
  	
  	for (aviao=fila->inicio; aviao!= NULL; aviao=aviao->prox) {
 	     		
  		hora_atual = now_tm->tm_hour;
 	    minuto_atual = now_tm->tm_min;
- 		numero_pista = gerar_numero(1,3);
-	    printf("Código do voo: %s\n", aviao->codigo);
 
-	    if (strcmp(aviao->tipo_de_operacao,"D") == 0) {
+	    if(strcmp(aviao->tipo_de_operacao,"A") == 0) {
 
-	    	printf("Status: [aeronave decolou]\n");	
+	    	numero_pista = gerar_numero(1,2);
 	    } else {
 
-	    	printf("Status: [aeronave pousou]\n");
+	    	numero_pista = gerar_numero(1,3);
 	    }
-		
+	   	
 		contador ++;
 
 		if(contador == 3) {
@@ -228,6 +227,8 @@ void imprime (Fila* fila,int nVoos,int nAproximacoes,int nDecolagens) {
 			contador = 0;
 		}
 
+		printf("Código do voo: %s\n", aviao->codigo);
+	    printf("Status: [aeronave %s]\n", aviao->status);
 		printf("Horário do início do procedimento: %d:%d \n", hora_atual, minuto_atual);
 		printf("Número da pista: %d\n\n", numero_pista);
 
