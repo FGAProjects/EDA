@@ -89,7 +89,7 @@ Aviao* retira_inicio (Aviao* inicio) {
  	return aviao;
 }
 
-void push (Fila* fila,char codigo[CODIGO_AVIAO],int combustivel,int numero_aleatorio) {
+Fila* push (Fila* fila,char codigo[CODIGO_AVIAO],int combustivel,int numero_aleatorio) {
 
  	fila->final = ins_fim(fila->final,codigo,combustivel,numero_aleatorio);
 
@@ -97,6 +97,8 @@ void push (Fila* fila,char codigo[CODIGO_AVIAO],int combustivel,int numero_aleat
 
  		fila->inicio = fila->final;
 	}
+
+	return fila;
 }
 
 void pop (Fila* fila) {
@@ -174,10 +176,38 @@ int gerar_numero_char(int numero) {
 	return numero;
 }
 
+// Fila* ordena(Fila* fila,char codigo[CODIGO_AVIAO],int combustivel,int numero_aleatorio) {
+
+// 	Aviao* aviao;
+// 	Fila* novo = push(fila,codigo,combustivel,numero_aleatorio);
+// 	Fila* anterior = NULL;
+// 	Fila* p = fila;
+
+// 	for (aviao=fila->inicio; aviao!= NULL; aviao=aviao->prox) {
+
+// 		if(aviao->combustivel == 0) {
+
+// 			anterior = p;
+// 		}
+
+// 		if(anterior == NULL) {
+
+// 			novo->inicio = fila->inicio;
+// 			fila->inicio = aviao;
+// 		} else {
+
+// 			novo->inicio = anterior->final;
+// 			anterior->final = aviao;
+// 		}
+// 	}
+
+// 	return fila;
+// }
+
 void imprime (Fila* fila,int nVoos,int nAproximacoes,int nDecolagens) {
 
  	Aviao* aviao;
- 	char procedimento[TIPO_DE_OPERACAO];
+ 	
 	time_t now;
 	struct tm *now_tm;
 	int numero_pista;
@@ -187,7 +217,8 @@ void imprime (Fila* fila,int nVoos,int nAproximacoes,int nDecolagens) {
 	int contador_de_pista = 0;
 	int contador = 0;
 	int interador = 0;
-	int repeticaoA = 0;
+	int contador_pista_3 = 0;
+	int alerta_critico = 0;
 
 	now = time(NULL);
 	now_tm = localtime(&now);
@@ -204,13 +235,21 @@ void imprime (Fila* fila,int nVoos,int nAproximacoes,int nDecolagens) {
  	printf("Listagem de eventos\n\n");
  	
  	for (aviao=fila->inicio; aviao!= NULL; aviao=aviao->prox) {
-	     		
+	     
+	    //ARRUMAR AS HORAS
+	    now_tm = add_unidade_de_tempo(now_tm, interador);
  		hora_atual = now_tm->tm_hour;
 	    minuto_atual = now_tm->tm_min;
 
 	    if(strcmp(aviao->tipo_de_operacao,"A") == 0) {
 
+			numero_pista = gerar_numero(1,2);	    	
+	    } else if(strcmp(aviao->tipo_de_operacao,"A") == 0 && aviao->combustivel == 0) {
+
 	    	numero_pista = gerar_numero(1,2);
+	    	//GANHA PRIORIDADE
+	    	alerta_critico ++;
+
 	    } else {
 
 	    	numero_pista = gerar_numero(1,3);
@@ -218,14 +257,26 @@ void imprime (Fila* fila,int nVoos,int nAproximacoes,int nDecolagens) {
 	   	
 		contador ++;
 
-		if(contador == 3) {
-	    	
+		if(alerta_critico == 3) {
+
+			printf("“ALERTA GERAL DE DESVIO DE AERONAVE\n");
+			numero_pista = 3; //CASO ESTEJA DISPONIVEL, DEVE SER FEITO UMA FORMA DE NÃO 
+			//REPETIR AS PISTAS
 			interador ++;
 			now_tm = add_unidade_de_tempo(now_tm, interador);
-			aviao->combustivel --;
 			interador = 0;
-			contador = 0;
 		}
+
+		// if(contador == 3) {
+	    	
+		// 	interador ++;
+		// 	now_tm = add_unidade_de_tempo(now_tm, interador);
+		// 	aviao->combustivel --;
+		// 	interador = 0;
+		// 	contador = 0;
+		// 	contador_pista_3 = 0;
+		// 	alerta_critico = 0;
+		// }
 
 		printf("Código do voo: %s\n", aviao->codigo);
 	    printf("Status: [aeronave %s]\n", aviao->status);
@@ -344,7 +395,7 @@ int main () {
 
 			numero_aleatorio = gerar_numero_char(gerar_numero(65,68));
 			combustivelA = gerar_numero(0,12);
-			push(fila,codigo,combustivelA,numero_aleatorio);
+			fila = push(fila,codigo,combustivelA,numero_aleatorio);
 		}
 	}
 
