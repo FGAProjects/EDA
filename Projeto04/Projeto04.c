@@ -290,7 +290,7 @@ void imprime (Fila* fila,int nVoos,int nAproximacoes,int nDecolagens) {
 			contador_de_pista ++;
 			if(contador_de_pista == 3) {
 
-				printf("ALERTA GERAL DE DESVIO DE AERONAVE\n");
+				printf("ALERTA GERAL DE DESVIO DE AERONAVE\n\n");
 				contador_de_pista = 0;
 				contador_critico = gerar_numero(1,3);
 				
@@ -310,6 +310,32 @@ void imprime (Fila* fila,int nVoos,int nAproximacoes,int nDecolagens) {
 			printf("Número da pista: %d\n\n", numero_pista);	
 		} else {
 
+		}
+	}
+}
+
+Fila* ordena(Fila* fila) {
+
+	Aviao* aviao;
+	Fila* anterior = NULL;
+	Fila* p = fila;
+
+	for (aviao=fila->inicio; aviao!= NULL; aviao=aviao->prox) {
+
+		if(aviao->combustivel == 0) {
+
+			anterior = p;
+			aviao = aviao->prox;
+		}
+
+		if(anterior == NULL) {
+
+			fila->inicio = aviao;
+			aviao = aviao->prox;
+		} else {
+
+			fila->final = anterior->inicio;
+			anterior->inicio = aviao;
 		}
 	}
 }
@@ -350,7 +376,7 @@ int main () {
 	}
 
 	fclose(file);
-
+	
  	imprime(fila,nVoos,nAproximacoes,nDecolagens);
  	libera(fila);
 
