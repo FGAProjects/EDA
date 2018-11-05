@@ -238,13 +238,13 @@ void imprime (Fila* fila,int nVoos,int nAproximacoes,int nDecolagens) {
 	    		pista_ocupada1 = numero_pista;
 	    	} else {
 	    		
-	    		numero_pista = 0;
 	    		strcpy(aviao->status,"pousou");
 	    	}
 
 	    	contator1++;
 
 	    	if(contator1 == 4){
+	    		
 	    		contator1 = 0;
 	    	}
 			
@@ -266,12 +266,14 @@ void imprime (Fila* fila,int nVoos,int nAproximacoes,int nDecolagens) {
 	    		strcpy(aviao->status,"decolou");
 	    		pista_ocupada1 = numero_pista;
 	    	} else if(contator1 == 2) {
+	    		
 	    		while (numero_pista == pista_ocupada && numero_pista == pista_ocupada1){
+	    		
 	    			numero_pista = gerar_numero(1,3);
 	    		}
 	    		strcpy(aviao->status,"decolou");
 	    	} else {
-	    		numero_pista = 0;
+	    		
 	    		strcpy(aviao->status,"decolou");
 	    	}
 
@@ -302,15 +304,13 @@ void imprime (Fila* fila,int nVoos,int nAproximacoes,int nDecolagens) {
 			}
 		}
 
-		if(numero_pista != 0) {
+		
 
 			printf("Código do voo: %s\n", aviao->codigo);
 	    	printf("Status: [aeronave %s]\n", aviao->status);
 			printf("Horário do início do procedimento: %d:%d \n", hora_atual, minuto_atual);
 			printf("Número da pista: %d\n\n", numero_pista);	
-		} else {
-
-		}
+		
 	}
 }
 
