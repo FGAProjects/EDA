@@ -68,57 +68,64 @@ bool isFull (Arvore* root) {
     return false;
 }
 
-int searchValue(Arvore* arvore, int valor) {
+int isInTree(Arvore *arvore,int num) {
 
     if(arvore_vazia(arvore)) {
-    
-      return 0;
+
+        return 0;
     }
 
-    if(arvore == NULL) {
+    return arvore->valor == num || isInTree(arvore->esquerda,num) || isInTree(arvore->direita,num);
+}
 
-        printf("\nValor não encontrado\n\n");
-    }
-  
-    int nivel = 1;
+int searchValue(Arvore* arvore, int valor) {
 
-    Arvore* pai = NULL;
-    Arvore* irmao = NULL;
 
-    while(arvore != NULL) {
+    if(isInTree(arvore,valor)) {
 
-        if(arvore->valor == valor) {
+        int nivel = 1;
 
-            break;
+        Arvore* pai = NULL;
+        Arvore* irmao = NULL;
+
+        while(arvore != NULL) {
+
+            if(arvore->valor == valor) {
+
+                break;
+            }
+
+            nivel ++;
+            pai = arvore;
+
+            if(arvore->valor > valor) {
+
+                irmao = arvore->direita;
+                arvore = pai->esquerda;
+            } else {
+
+                irmao = arvore->esquerda;
+                arvore = pai->direita;
+            }
         }
 
-        nivel ++;
-        pai = arvore;
-
-        if(arvore->valor > valor) {
-
-            irmao = arvore->direita;
-            arvore = pai->esquerda;
+        printf("Nivel: %d\n", nivel);
+    
+        if (pai != NULL) {
+        
+            printf("O pai eh: %d\n", pai->valor);
+        }
+        if (irmao != NULL) {
+        
+            printf("O irmao eh: %d\n", irmao->valor);
         } else {
-
-            irmao = arvore->esquerda;
-            arvore = pai->direita;
-        }
-    }
-
-    printf("Nivel: %d\n", nivel);
-    
-    if (pai != NULL) {
         
-        printf("O pai eh: %d\n", pai->valor);
-    }
-    if (irmao != NULL) {
-        
-        printf("O irmao eh: %d\n", irmao->valor);
+            printf("Nao tem irmao\n");
+        }    
     } else {
-        
-        printf("Nao tem irmao\n");
-    }
+
+        printf("\nO NÚMERO %d NÃO PERTENCE A ÁRVORE!\n\n",valor);
+    }    
 }
 
 Arvore* removeValue(Arvore* arvore,int valor) {
@@ -304,9 +311,6 @@ int main () {
 
                     arvore = removeValue(arvore,valor);
 
-                } else {
-
-                    printf("\nO NÚMERO %d NÃO PERTENCE A ÁRVORE!\n\n",valor);   
                 }
 
             break;
