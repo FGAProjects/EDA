@@ -310,7 +310,6 @@ int main () {
                 if(searchValue(arvore, valor)) {
 
                     arvore = removeValue(arvore,valor);
-
                 }
 
             break;
@@ -334,7 +333,7 @@ int main () {
             break;
 
             case 10:
-                /*Ta estranho isso aqui, uma hora funciona o balanceamento, outra hora não*/
+                
                 if (getBalance(arvore) <= 1) {
 
                     printf("A árvore já está balanceada\n");
@@ -342,7 +341,6 @@ int main () {
 
                     printf("Insira o valor médio para balancear a árvore\n");
                     scanf("%d", &valor);
-                    /*Ta quebrando aqui*/
                     arvore = insertBalanced(arvore,valor);
                 }
             break;
