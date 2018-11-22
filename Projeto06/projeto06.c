@@ -215,7 +215,33 @@ double GLCM(int *matrizImagem[], int linha, int coluna) {
 
         glcmdireitacima[auxLinha] = (double*) calloc(256,sizeof(double));
     }
+
+    for (int auxLinha = 0; auxLinha < linha; auxLinha ++) {
+        
+        for(int auxColuna = 1; auxColuna < coluna; auxColuna ++) {
+         
+            glcmesquerda[matrizImagem[auxLinha][linha - auxColuna]][matrizImagem[auxLinha][coluna - auxColuna]] = 
+            glcmesquerda[matrizImagem[auxLinha][linha - auxColuna]][matrizImagem[auxLinha][coluna - auxColuna]] + 1;
+        }
+    } 
+
+    for (int auxLinha = 0; auxLinha < linha; auxLinha ++) {
+        
+        for(int auxColuna = 1; auxColuna < coluna; auxColuna ++) {
+            
+            glcmcima[matrizImagem[linha - auxColuna][auxLinha]][matrizImagem[linha - auxColuna][auxLinha]] = 
+            glcmcima[matrizImagem[linha - auxColuna][auxLinha]][matrizImagem[linha - auxColuna][auxLinha]] + 1;
+        }
+    }
+
+    for (int auxLinha = 0; auxLinha < 1024; auxLinha ++) {
     
+        for(int auxColuna = 0; auxColuna < 1024; auxColuna ++) {
+            
+            glcmdireitabaixo[matrizImagem[auxColuna][auxLinha]][matrizImagem[auxColuna + 1][auxLinha + 1]] = 
+            glcmdireitabaixo[matrizImagem[auxColuna][auxLinha]][matrizImagem[auxColuna + 1][auxLinha+1]] + 1;
+        }
+    }   
 
     desaloca_matriz_double(256,256,glcmdireita);
     desaloca_matriz_double(256,256,glcmesquerda);

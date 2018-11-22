@@ -80,12 +80,15 @@ float *GLCM(int **matriz){
         }
     }
 
+
+
     for (int i = 0;i<1025;i++){
         for(int j=1;j<1025;j++){
          glcmcima[matriz[1025-j][i]][matriz[1024-j][i]] = glcmcima[matriz[1025-j][i]][matriz[1024-j][i]] + 1;
         }
     }
  
+ //PAREI AQUI
 
     for (int i = 0;i<1025;i++){
         for(int j=0;j<1024;j++){
@@ -98,6 +101,8 @@ float *GLCM(int **matriz){
          glcmdireitabaixo[matriz[j][i]][matriz[j+1][i+1]] = glcmdireitabaixo[matriz[j][i]][matriz[j+1][i+1]] + 1;
         }
     }
+
+    //CONTINUAR DESSE FOR
 
     for (int i = 1;i<1025;i++){
         for(int j=0;j<1024;j++){
