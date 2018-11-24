@@ -685,8 +685,6 @@ int ILBP(int **matrizImagem, int linha, int coluna) {
     }
 
     return menorILBP;
-    //desaloca_matriz(linha,coluna,matrizMedia);
-    //desaloca_matriz(linha,coluna,matrizBinaria);
 }
 
 double *armazenaArquivoMatriz(char* filename){
@@ -696,7 +694,11 @@ double *armazenaArquivoMatriz(char* filename){
 	int qtde_colunas_asfalto = 1;
 	char caractere;
 	char arquivo_asfalto [] = "DataSet/asphalt/asphalt_01.txt";
-	int* dimensaoMatriz;
+    int histograma[512];
+    double *VetorCompleto = malloc (sizeof(double) * 536);
+    double *VetorNormalizado = malloc (sizeof(double) * 536);
+    int ILBP_imagem;
+    double *GLCM_imagem;
 
 	file_asfalto = fopen(arquivo_asfalto, "r");
 
@@ -752,12 +754,6 @@ double *armazenaArquivoMatriz(char* filename){
     sleep(1);
 	printf("Preparando imagem pro ILPB...");
 	sleep(1);
-    
-    int histograma[512];
-    double *VetorCompleto = malloc (sizeof(double) * 536);
-    double *VetorNormalizado = malloc (sizeof(double) * 536);
-    int ILBP_imagem;
-    double *GLCM_imagem;
 
     GLCM_imagem = GLCM(matrizImagem); 
 
@@ -786,6 +782,8 @@ double *armazenaArquivoMatriz(char* filename){
     }
 
     VetorNormalizado = normaliza(VetorCompleto);
+
+    //Tamanho do vetor é igual a 536
 
     return VetorNormalizado;
 
