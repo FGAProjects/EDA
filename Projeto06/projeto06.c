@@ -403,80 +403,96 @@ double *GLCM(int *matrizImagem[]) {
 
     return retorna;
 
-    // free(retorna);
+    free(retorna);
 }
 
-int ILBP(int *matrizImagem[], int linha, int coluna) {
+int ILBP(int **matrizImagem, int linha, int coluna) {
 
-	int soma = 0;
-	double media = 0;
-    int contador = 0;
-    int contador_linha = 0;
-    int contador_coluna = 0;
     int ILBP[9];
+    float media;
+    float matriz[3][3];
+    int  matriztemp[3][3];
 
-	int **matrizMedia = (int**)malloc(linha * sizeof(int*));
+    media = (matrizImagem[linha - 1][coluna - 1] + matrizImagem[linha - 1][coluna] + matrizImagem[linha - 1][coluna + 1] + matrizImagem[linha][coluna - 1] +
+    matrizImagem[linha][coluna] + matrizImagem[linha][coluna + 1] + matrizImagem[linha + 1][coluna - 1] + matrizImagem[linha + 1][coluna] + matrizImagem[linha + 1][coluna + 1])/9;
 
-    for(int auxLinha = 0; auxLinha < linha; auxLinha ++){
-
-        matrizMedia[auxLinha] = (int*) malloc(coluna * sizeof(int));
+    if((matrizImagem[linha - 1][coluna - 1] - media) >= 0) {
+        
+        matriztemp[0][0] = 1;
+    } else {
+        matriztemp[0][0] = 0;
     }
 
-    int **matrizBinaria = (int**) malloc(linha * sizeof(int*));
-
-    for(int auxLinha = 0; auxLinha < linha; auxLinha ++) {
-
-        matrizBinaria[auxLinha] = (int*) malloc(coluna * sizeof(int));
+    if((matrizImagem[linha - 1][coluna] - media) >= 0) {
+        
+        matriztemp[0][1] = 1;
+    }else {
+        matriztemp[0][1] = 0;
     }
 
-    for(int auxLinha = 0; auxLinha < linha - 2; auxLinha ++) {
+    if((matrizImagem[linha - 1][coluna + 1] - media) >= 0) {
+        
+        matriztemp[0][2] = 1;
+    }else {
+        matriztemp[0][2] = 0;
+    }
+    
+    if((matrizImagem[linha][coluna - 1] - media) >= 0) {
+        
+        matriztemp[1][0] = 1;
+    }else {
+    
+        matriztemp[1][0] = 0;
+    }
+    
+    if((matrizImagem[linha][coluna] - media) >= 0) {
+        
+        matriztemp[1][1] = 1;
+    }else {
+    
+        matriztemp[1][1] = 0;
+    }
+    
+    if((matrizImagem[linha][coluna + 1] - media) >= 0) {
+        
+        matriztemp[1][2] = 1;
+    }else {
+    
+        matriztemp[1][2] = 0;
+    }
+    
+    if((matrizImagem[linha + 1][coluna - 1] - media) >= 0) {
 
-        for(int auxColuna = 0; auxColuna < coluna -2; auxColuna ++) {
+        matriztemp[2][0] = 1;
+    }else {
+    
+        matriztemp[2][0] = 0;
+    }
+    if((matrizImagem[linha + 1][coluna] - media) >= 0) {
 
-            soma = 0;
-            for(int auxLinhaTrinca = auxLinha; auxLinhaTrinca < auxLinha + 3; auxLinhaTrinca ++) {
+        matriztemp[2][1] = 1;
+    }else {
+    
+        matriztemp[2][1] = 0;
+    }
+    
+    if((matrizImagem[linha + 1][coluna + 1] - media) >= 0) {
 
-                for(int auxColunaTrinca = auxColuna; auxColunaTrinca < auxColuna + 3; auxColunaTrinca ++) {
+        matriztemp[2][2] = 1;
+    }else {
 
-                    soma += matrizImagem[auxLinhaTrinca][auxColunaTrinca];
-                }
-            }
-            media = (double) soma / 9;
-            matrizMedia[auxLinha][auxColuna] = media;
-        }
+        matriztemp[2][2] = 0;
     }
 
-    for(int auxLinha = 0; auxLinha < linha - 2; auxLinha ++) {
-
-        for(int auxColuna = 0; auxColuna < coluna -2; auxColuna ++) {
-
-            soma = 0;
-            for(int auxLinhaTrinca = auxLinha; auxLinhaTrinca < auxLinha + 3; auxLinhaTrinca ++) {
-
-                for(int auxColunaTrinca = auxColuna; auxColunaTrinca < auxColuna + 3; auxColunaTrinca ++) {
-
-                    if(matrizMedia[auxLinha][auxColuna] >= matrizImagem[auxLinhaTrinca][auxColunaTrinca]) {
-
-                        matrizBinaria[auxLinhaTrinca][auxColunaTrinca] = 1;
-                    } else {
-
-                        matrizBinaria[auxLinhaTrinca][auxColunaTrinca] = 0;
-                    }
-                }
-            }
-        }
-        contador_linha ++;
-    }
-
-    ILBP[0] = matrizBinaria[0][0];
-    ILBP[1] = matrizBinaria[0][1];
-    ILBP[2] = matrizBinaria[0][2];
-    ILBP[3] = matrizBinaria[1][2];
-    ILBP[4] = matrizBinaria[2][2];
-    ILBP[5] = matrizBinaria[2][1];
-    ILBP[6] = matrizBinaria[2][0];
-    ILBP[7] = matrizBinaria[1][0];
-    ILBP[8] = matrizBinaria[1][1];
+    ILBP[0] = matrizImagem[0][0];
+    ILBP[1] = matrizImagem[0][1];
+    ILBP[2] = matrizImagem[0][2];
+    ILBP[3] = matrizImagem[1][2];
+    ILBP[4] = matrizImagem[2][2];
+    ILBP[5] = matrizImagem[2][1];
+    ILBP[6] = matrizImagem[2][0];
+    ILBP[7] = matrizImagem[1][0];
+    ILBP[8] = matrizImagem[1][1];
 
     //---------------------------- rotação ---------------------------//
 
@@ -669,8 +685,8 @@ int ILBP(int *matrizImagem[], int linha, int coluna) {
     }
 
     return menorILBP;
-    desaloca_matriz(linha,coluna,matrizMedia);
-    desaloca_matriz(linha,coluna,matrizBinaria);
+    //desaloca_matriz(linha,coluna,matrizMedia);
+    //desaloca_matriz(linha,coluna,matrizBinaria);
 }
 
 double *armazenaArquivoMatriz(char* filename){
@@ -743,9 +759,7 @@ double *armazenaArquivoMatriz(char* filename){
     int ILBP_imagem;
     double *GLCM_imagem;
 
-    GLCM_imagem = GLCM(matrizImagem);
-
-    printf("depois da linha 774 glcm"); 
+    GLCM_imagem = GLCM(matrizImagem); 
 
     qtde_linhas_asfalto -= 1;
     qtde_colunas_asfalto -=1;
