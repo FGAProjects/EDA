@@ -94,6 +94,36 @@ int salvaArquivos(int *array, int testeOuTreino, int gramaOuAsfalto){
     return tipo;
 }
 
+double *normaliza(double* vetor){
+
+    float menor = 1000;
+    float maior = 0;
+    float divisao;
+    float conta;
+    
+    for(int auxLinha = 0; auxLinha < 536; auxLinha++) {
+        
+        if(menor > vetor[auxLinha]) {
+            
+            menor = vetor[auxLinha];
+        }
+
+        if(maior < vetor[auxLinha]) {
+            
+            maior = vetor[auxLinha];
+        }
+    }
+    
+    divisao = maior - menor;
+    
+    for(int auxLinha = 0; auxLinha < 536; auxLinha++) {
+    
+        vetor[auxLinha] = (vetor[auxLinha] - menor) / divisao;
+    }
+
+    return vetor;
+}
+
 void nomeArquivo(int codigoArquivo, char* nome){
 
     switch(codigoArquivo){
@@ -171,50 +201,37 @@ double **desaloca_matriz_double(int linhas,int coluna,double **matriz) {
     free(matriz);   
 }
 
-double GLCM(int *matrizImagem[], int linha, int coluna) {
+double *GLCM(int *matrizImagem[]) {
 
-    double **glcmdireita = (double**)calloc(256,sizeof(double*));
-    double **glcmesquerda = (double**)calloc(256,sizeof(double*));
-    double **glcmcima = (double**)calloc(256,sizeof(double*));
-    double **glcmbaixo = (double**)calloc(256,sizeof(double*));
-    double **glcmdireitabaixo = (double**)calloc(256,sizeof(double*));
-    double **glcmesquerdabaixo = (double**)calloc(256,sizeof(double*));
-    double **glcmdireitacima = (double**)calloc(256,sizeof(double*));
+    int linha = 0;
+    int coluna = 0;
 
-    for(int auxLinha = 0; auxLinha < 256; auxLinha ++){
+    double glcmdireita[256][256];
+    double glcmesquerda[256][256];
+    double glcmcima[256][256];
+    double glcmbaixo[256][256];
+    double glcmdireitabaixo[256][256];
+    double glcmesquerdabaixo[256][256];
+    double glcmesquerdacima[256][256];
+    double glcmdireitacima[256][256];
 
-        glcmdireita[auxLinha] = (double*) calloc(256,sizeof(double));
+    for (int auxLinha = 0; auxLinha < 256; auxLinha ++) {
+        
+        for(int auxColuna = 0; auxColuna <256; auxColuna ++) {
+           
+           glcmdireita[auxLinha][auxColuna] = 0;
+           glcmesquerda[auxLinha][auxColuna] = 0;
+           glcmcima[auxLinha][auxColuna] = 0;
+           glcmbaixo[auxLinha][auxColuna] = 0;
+           glcmdireitabaixo[auxLinha][auxColuna] = 0;
+           glcmdireitacima[auxLinha][auxColuna] = 0;
+           glcmesquerdacima[auxLinha][auxColuna] = 0;
+           glcmesquerdabaixo[auxLinha][auxColuna] = 0;
+        }
     }
 
-    for(int auxLinha = 0; auxLinha < 256; auxLinha ++){
-
-        glcmcima[auxLinha] = (double*) calloc(256,sizeof(double));
-    }
-
-    for(int auxLinha = 0; auxLinha < 256; auxLinha ++){
-
-        glcmesquerda[auxLinha] = (double*) calloc(256,sizeof(double));
-    }
-
-    for(int auxLinha = 0; auxLinha < 256; auxLinha ++){
-
-        glcmbaixo[auxLinha] = (double*) calloc(256,sizeof(double));
-    }
-
-    for(int auxLinha = 0; auxLinha < 256; auxLinha ++){
-
-        glcmdireitabaixo[auxLinha] = (double*) calloc(256,sizeof(double));
-    }
-
-    for(int auxLinha = 0; auxLinha < 256; auxLinha ++){
-
-        glcmesquerdabaixo[auxLinha] = (double*) calloc(256,sizeof(double));
-    }
-
-    for(int auxLinha = 0; auxLinha < 256; auxLinha ++){
-
-        glcmdireitacima[auxLinha] = (double*) calloc(256,sizeof(double));
-    }
+    linha = 1025;
+    coluna = 1024;
 
     for (int auxLinha = 0; auxLinha < linha; auxLinha ++) {
         
@@ -225,35 +242,171 @@ double GLCM(int *matrizImagem[], int linha, int coluna) {
         }
     } 
 
+    linha = 1025;
+    coluna = 1025;
+
     for (int auxLinha = 0; auxLinha < linha; auxLinha ++) {
         
         for(int auxColuna = 1; auxColuna < coluna; auxColuna ++) {
             
-            glcmcima[matrizImagem[linha - auxColuna][auxLinha]][matrizImagem[linha - auxColuna][auxLinha]] = 
-            glcmcima[matrizImagem[linha - auxColuna][auxLinha]][matrizImagem[linha - auxColuna][auxLinha]] + 1;
+            glcmcima[matrizImagem[linha - auxColuna][auxLinha]][matrizImagem[1024 - auxColuna][auxLinha]] = 
+            glcmcima[matrizImagem[linha - auxColuna][auxLinha]][matrizImagem[1024 - auxColuna][auxLinha]] + 1;
         }
     }
 
-    for (int auxLinha = 0; auxLinha < 1024; auxLinha ++) {
-    
+    linha = 1025;
+    coluna = 1025;
+
+    for (int auxLinha = 0; auxLinha < linha; auxLinha ++) {
+        
+        for(int auxColuna = 1; auxColuna < coluna; auxColuna ++) {
+        
+            glcmcima[matrizImagem[1025 - auxColuna][auxLinha]][matrizImagem[1024 - auxColuna][auxLinha]] = 
+            glcmcima[matrizImagem[1025 - auxColuna][auxLinha]][matrizImagem[1024 - auxColuna][auxLinha]] + 1;
+        }
+    }
+
+    linha = 1025;
+    coluna = 1024;
+
+    for (int auxLinha = 0; auxLinha < 1025; auxLinha ++) {
+        
         for(int auxColuna = 0; auxColuna < 1024; auxColuna ++) {
             
-            glcmdireitabaixo[matrizImagem[auxColuna][auxLinha]][matrizImagem[auxColuna + 1][auxLinha + 1]] = 
-            glcmdireitabaixo[matrizImagem[auxColuna][auxLinha]][matrizImagem[auxColuna + 1][auxLinha+1]] + 1;
+            glcmbaixo[matrizImagem[auxColuna][auxLinha]][matrizImagem[auxColuna + 1][auxLinha]] = 
+            glcmbaixo[matrizImagem[auxColuna][auxLinha]][matrizImagem[auxColuna + 1][auxLinha]] + 1;
         }
-    }   
+    }
 
-    desaloca_matriz_double(256,256,glcmdireita);
-    desaloca_matriz_double(256,256,glcmesquerda);
-    desaloca_matriz_double(256,256,glcmcima);
-    desaloca_matriz_double(256,256,glcmbaixo);
-    desaloca_matriz_double(256,256,glcmdireitabaixo);
-    desaloca_matriz_double(256,256,glcmdireitacima);
+    linha = 1024;
+    coluna = 1024;
 
-    return 0;
+    for (int auxLinha = 0; auxLinha < linha; auxLinha ++) {
+        
+        for(int auxColuna = 0; auxColuna < coluna; auxColuna ++) {
+        
+            glcmdireitabaixo[matrizImagem[auxColuna][auxLinha]][matrizImagem[auxColuna + 1][auxColuna + 1]] = 
+            glcmdireitabaixo[matrizImagem[auxColuna][auxLinha]][matrizImagem[auxColuna + 1][auxLinha + 1]] + 1;
+        }
+    }
+
+    linha = 1025;
+    coluna = 1024;
+
+    for (int auxLinha = 1; auxLinha < linha; auxLinha ++) {
+        
+        for(int auxColuna = 0; auxColuna < coluna; auxColuna ++) {
+        
+            glcmesquerdabaixo[matrizImagem[auxColuna][1025 - auxLinha]][matrizImagem[auxColuna + 1][1024 - auxLinha]] = 
+            glcmesquerdabaixo[matrizImagem[auxColuna][1025 - auxLinha]][matrizImagem[auxColuna + 1][1024 - auxLinha]] + 1;
+        }
+    }
+
+    linha = 1025;
+    coluna = 1025;
+
+    for (int auxLinha = 1; auxLinha < linha; auxLinha++) {
+        
+        for(int auxColuna = 1; auxColuna < coluna; auxColuna ++) {
+     
+           glcmesquerdacima[matrizImagem[1025 - auxColuna][1025 - auxLinha]][matrizImagem[1024 - auxColuna][1024 - auxLinha]] = 
+           glcmesquerdacima[matrizImagem[1025 - auxColuna][1025 - auxLinha]][matrizImagem[1024 - auxColuna][1024 - auxLinha]] + 1;
+        }
+    }
+
+    linha = 1024;
+    coluna = 1025;
+
+    for (int auxLinha = 0; auxLinha < linha; auxLinha ++) {
+        for(int auxColuna = 1; auxColuna < coluna; auxColuna ++) {
+        
+            glcmdireitacima[matrizImagem[1025 - auxColuna][auxLinha]][matrizImagem[1024 - auxColuna][auxLinha + 1]] = 
+            glcmdireitacima[matrizImagem[1025 - auxColuna][auxLinha]][matrizImagem[1024 - auxColuna][auxLinha + 1]] + 1;
+        }
+    }
+
+    double energia[8];
+    double contraste[8];
+    double homogeneidade[8];
+    double modulo;
+    double d,n,m;
+
+    for(int auxLinha = 0; auxLinha < 8; auxLinha++) {
+
+        energia[auxLinha] = 0;
+        contraste[auxLinha] = 0;
+        homogeneidade[auxLinha] = 0;
+    }
+
+    for(int auxLinha = 0; auxLinha < 256; auxLinha++) {
+        
+        for(int auxColuna = 0; auxColuna < 256; auxColuna++) {
+
+            if(auxColuna > auxLinha) {
+                
+                modulo = -1;
+            } else{
+                
+                modulo = 1;
+            }
+    
+            d = (auxLinha - auxColuna);
+
+            n = d*d;
+            m = 1 + (d * modulo);
+
+            energia[0] = energia[0] + glcmdireita[auxLinha][auxColuna] * glcmdireita[auxLinha][auxColuna];
+            energia[1] = energia[1] + glcmesquerda[auxLinha][auxColuna] * glcmesquerda[auxLinha][auxColuna];
+            energia[2] = energia[2] + glcmcima[auxLinha][auxColuna] * glcmcima[auxLinha][auxColuna];
+            energia[3] = energia[3] + glcmbaixo[auxLinha][auxColuna] * glcmbaixo[auxLinha][auxColuna];
+            energia[4] = energia[4] + glcmdireitabaixo[auxLinha][auxColuna] * glcmdireitabaixo[auxLinha][auxColuna];
+            energia[5] = energia[5] + glcmesquerdabaixo[auxLinha][auxColuna] * glcmesquerdabaixo[auxLinha][auxColuna];
+            energia[6] = energia[6] + glcmesquerdacima[auxLinha][auxColuna] * glcmesquerdacima[auxLinha][auxColuna];
+            energia[7] = energia[7] + glcmdireitacima[auxLinha][auxColuna] * glcmdireitacima[auxLinha][auxColuna];
+
+            contraste[0] = contraste[0] + n * glcmdireita[auxLinha][auxColuna];
+            contraste[1] = contraste[1] + n*glcmesquerda[auxLinha][auxColuna];
+            contraste[2] = contraste[2] + n*glcmcima[auxLinha][auxColuna];
+            contraste[3] = contraste[3] + n*glcmbaixo[auxLinha][auxColuna];
+            contraste[4] = contraste[4] + n*glcmdireitabaixo[auxLinha][auxColuna];
+            contraste[5] = contraste[5] + n*glcmesquerdabaixo[auxLinha][auxColuna];
+            contraste[6] = contraste[6] + n*glcmesquerdacima[auxLinha][auxColuna];
+            contraste[7] = contraste[7] + n*glcmdireitacima[auxLinha][auxColuna];
+
+            homogeneidade[0] = homogeneidade[0] + ((double)glcmdireita[auxLinha][auxColuna] / m);
+            homogeneidade[1] = homogeneidade[1] + ((double)glcmesquerda[auxLinha][auxColuna] / m);
+            homogeneidade[2] = homogeneidade[2] + ((double)glcmcima[auxLinha][auxColuna] / m);
+            homogeneidade[3] = homogeneidade[3] + ((double)glcmbaixo[auxLinha][auxColuna] / m);
+            homogeneidade[4] = homogeneidade[4] + ((double)glcmdireitabaixo[auxLinha][auxColuna] / m);
+            homogeneidade[5] = homogeneidade[5] + ((double)glcmesquerdabaixo[auxLinha][auxColuna] / m);
+            homogeneidade[6] = homogeneidade[6] + ((double)glcmesquerdacima[auxLinha][auxColuna] / m);
+            homogeneidade[7] = homogeneidade[7] + ((double)glcmdireitacima[auxLinha][auxColuna] / m);
+        }
+    }
+
+    double *retorna = malloc(sizeof(double) * 24);
+
+    for(int auxLinha = 0; auxLinha < 8; auxLinha ++) {
+        
+        retorna[auxLinha] = energia[auxLinha];
+    }
+
+    for(int auxLinha = 0; auxLinha < 8; auxLinha ++) {
+    
+        retorna[auxLinha + 8] = contraste[auxLinha];
+    }
+
+    for(int auxLinha = 0; auxLinha < 8; auxLinha ++) {
+    
+        retorna[auxLinha + 16] = homogeneidade[auxLinha];
+    }
+
+    return retorna;
+
+    // free(retorna);
 }
 
-int calculaILBP(int *matrizImagem[], int linha, int coluna) {
+int ILBP(int *matrizImagem[], int linha, int coluna) {
 
 	int soma = 0;
 	double media = 0;
@@ -520,7 +673,7 @@ int calculaILBP(int *matrizImagem[], int linha, int coluna) {
     desaloca_matriz(linha,coluna,matrizBinaria);
 }
 
-void armazenaArquivoMatriz(char* filename){
+double *armazenaArquivoMatriz(char* filename){
 
     FILE *file_asfalto;
 	int qtde_linhas_asfalto = 0;
@@ -560,9 +713,6 @@ void armazenaArquivoMatriz(char* filename){
         matrizImagem[auxLinha] = (int*) malloc(qtde_colunas_asfalto * sizeof(int));
     }
 
-    printf("Quantidade de linhas: %d\n", qtde_linhas_asfalto);
-    printf("Quantidade de colunas: %d\n", qtde_colunas_asfalto);
-
     rewind(file);
 
     if(file == NULL){
@@ -579,14 +729,54 @@ void armazenaArquivoMatriz(char* filename){
         }
     }
 
-    sleep(1);
-	printf("Preparando imagem pro ILPB...");
-	sleep(1);
-    calculaILBP(matrizImagem, qtde_linhas_asfalto, qtde_colunas_asfalto);
-
     printf("\n");
 
     fclose(file);
+
+    sleep(1);
+	printf("Preparando imagem pro ILPB...");
+	sleep(1);
+    
+    int histograma[512];
+    double *VetorCompleto = malloc (sizeof(double) * 536);
+    double *VetorNormalizado = malloc (sizeof(double) * 536);
+    int ILBP_imagem;
+    double *GLCM_imagem;
+
+    GLCM_imagem = GLCM(matrizImagem);
+
+    printf("depois da linha 774 glcm"); 
+
+    qtde_linhas_asfalto -= 1;
+    qtde_colunas_asfalto -=1;
+
+    for(int auxLinha = 1; auxLinha < qtde_linhas_asfalto; auxLinha ++) {
+        
+        for(int auxColuna = 1; auxColuna < qtde_colunas_asfalto; auxColuna ++) {
+
+            ILBP_imagem = ILBP(matrizImagem,auxLinha,auxColuna);
+            histograma[ILBP_imagem] =  histograma[ILBP_imagem] + 1;
+        }
+    }
+
+    desaloca_matriz(qtde_linhas_asfalto,qtde_colunas_asfalto,matrizImagem);
+
+    for(int auxLinha = 0; auxLinha < 512; auxLinha ++) {
+
+        VetorCompleto[auxLinha] = histograma[auxLinha];
+    }
+
+    for(int auxLinha = 0; auxLinha < 24; auxLinha ++) {
+
+        VetorCompleto[512 + auxLinha] = GLCM_imagem[auxLinha];
+    }
+
+    VetorNormalizado = normaliza(VetorCompleto);
+
+    return VetorNormalizado;
+
+    free(VetorNormalizado);
+    free(VetorCompleto);
 }
 
 int main () {
