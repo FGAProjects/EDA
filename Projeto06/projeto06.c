@@ -35,59 +35,61 @@ int *sorteiaTesteTreino() {
     free(numero_sorteado);
 }
 
-int salvaArquivos(int *array, int testeOuTreino, int gramaOuAsfalto){
+int salvaArquivos(int valor) {
+
+    FILE *arquivo = NULL;
 
     char nome[20];
     char diretorio[256];
     char linha[256];
-    int i = 0;
-    int tipo;
-
-    if(testeOuTreino == 0 && gramaOuAsfalto == 0){
-
-        strcpy(nome,"ArquivosTeste/teste_grass.txt");
-        strcpy(diretorio,"DataSet/grass/grass_");
-        tipo = 0;
-    }
-    else if (testeOuTreino == 0 && gramaOuAsfalto == 1){
-
-        strcpy(nome,"ArquivosTeste/teste_asphalt.txt");
-        strcpy(diretorio,"DataSet/asphalt/asphalt_");
-        tipo = 1;
-    }
-    else if (testeOuTreino == 1 && gramaOuAsfalto == 0){
-
-        strcpy(nome,"ArquivosTeste/treino_grass.txt");
-        strcpy(diretorio,"DataSet/grass/grass_");
-        tipo = 2;
-    }
-    else if (testeOuTreino == 1 && gramaOuAsfalto == 1){
-
-        strcpy(nome,"ArquivosTeste/treino_asphalt.txt");
-        strcpy(diretorio,"DataSet/asphalt/asphalt_");
-        tipo = 3;
-    }
-    else{
-        printf("ERRO");
-    }
-    printf("Criando: %s \n", nome);
-
-    FILE *arquivo = NULL;
-    arquivo = fopen(nome, "wt");
-
-    int aux, aux2;
     char temp[50];
 
-    for(i = 0; i < 25; i++){
-         if(array[i]<10){
+    int tipo;
 
-            aux = sprintf(temp, "%s0%d.txt\n", diretorio, array[i]);
-            fprintf(arquivo,"%s" ,temp);
-         }else if(array[i]>=10){
+    if(valor == 0) {
 
-            aux = sprintf(temp, "%s%d.txt\n", diretorio, array[i]);
-            fprintf(arquivo, "%s", temp);
+        strcpy(nome,"Grama/arquivos_grass.txt");
+        strcpy(diretorio,"DataSet/grass/grass_");
+
+        printf("Criando: %s \n", nome);
+        arquivo = fopen(nome, "w");
+
+        for(int aux = 0; aux < 51; aux++) {
+
+            if(aux < 10) {
+
+                sprintf(temp,"%s0%d.txt",diretorio,aux);
+                fprintf(arquivo, "%s\n", temp);    
+            } else {
+
+                sprintf(temp,"%s%d.txt",diretorio,aux);
+                fprintf(arquivo, "%s\n", temp);
+            }  
         }
+
+        tipo = 0;
+    } else {
+
+        strcpy(nome,"Asfalto/arquivos_asphalt.txt");
+        strcpy(diretorio,"DataSet/asphalt/asphalt_");
+        
+        printf("Criando: %s \n", nome);
+        arquivo = fopen(nome, "w");
+
+        for(int aux = 0; aux < 51; aux++) {
+
+           if(aux < 10) {
+
+                sprintf(temp,"%s0%d.txt",diretorio,aux);
+                fprintf(arquivo, "%s\n", temp);    
+            } else {
+
+                sprintf(temp,"%s%d.txt",diretorio,aux);
+                fprintf(arquivo, "%s\n", temp);
+            }
+        }
+
+        tipo = 1;
     }
 
     fclose(arquivo);
@@ -130,22 +132,12 @@ void nomeArquivo(int codigoArquivo, char* nome){
 
     	case(0):
 
-    		strcpy(nome,"ArquivosTeste/teste_grass.txt");
+    		strcpy(nome,"Grama/arquivos_grass.txt");
     	break;
 
     	case(1):
 
-    		strcpy(nome,"ArquivosTeste/teste_asphalt.txt");
-    	break;
-
-    	case(2):
-
-    		strcpy(nome,"ArquivosTeste/treino_grass.txt");
-    	break;
-
-    	case(3):
-
-    		strcpy(nome,"ArquivosTeste/treino_asphalt.txt");
+    		strcpy(nome,"Asfalto/arquivos_asphalt.txt");
     	break;
     }
 }
@@ -793,64 +785,46 @@ double *armazenaArquivoMatriz(char* filename){
 
 int main () {
 
-	int qtde_linhas_grama = 0;
-	int qtde_colunas_grama = 1;
-	int aux  = 0;
+	FILE *file;
 
-	FILE *file_grama;
+    char string[50];
+    char string_base_asfalto[20] = "Asfalto/asfalto_";
+    char string_base_grama[20] = "Grama/grama_"; 
 
-	char arquivo_grama [] = "DataSet/grass/grass_01.txt";
+    //Asfalto
+    for(int aux = 1; aux < 51; aux ++) {
 
-	int * ordemImagensAsfalto;
-    int * ordemImagensGrama;
-
-    ordemImagensAsfalto = sorteiaTesteTreino();
-    sleep(1);
-    ordemImagensGrama = sorteiaTesteTreino();
-
-    int asfaltoTreino[NUMERO_SORTEIO];
-    int asfaltoTeste[NUMERO_SORTEIO];
-    int gramaTreino[NUMERO_SORTEIO];
-    int gramaTeste[NUMERO_SORTEIO];
-
-    printf("Sorteando arquivos de Treino... \n");
-    for(aux = 0; aux < NUMERO_SORTEIO; aux ++){
-
-        asfaltoTreino[aux] = *(ordemImagensAsfalto + aux);
-        gramaTreino[aux] = *(ordemImagensGrama + aux);
+        snprintf(string, MAX, "%s%d.txt", string_base_asfalto, aux);
+        printf("%s\n", string);
+        file = fopen(string,"w");
     }
 
-    sleep(1);
+    //Grama
+    for(int aux = 1; aux < 51; aux ++) {
 
-    printf("Sorteando arquivos de Teste...\n");
-    for(; aux < MAX; aux ++){
-
-        asfaltoTeste[aux - NUMERO_SORTEIO] = *(ordemImagensAsfalto + aux);
-        gramaTeste[aux - NUMERO_SORTEIO] = *(ordemImagensGrama + aux);
+        snprintf(string, MAX, "%s%d.txt", string_base_grama, aux);
+        printf("%s\n", string);
+        file = fopen(string,"w");
     }
+
+    fclose(file);
 
     sleep(1);
     printf("Criando arquivos...\n");
 
     sleep(1);
-    int listaArquivosTesteGrama = salvaArquivos(gramaTeste, 0, 0);
+    int listaArquivosGrama = salvaArquivos(0);
 
     sleep(1);
-    int listaArquivosTesteAsfalto = salvaArquivos(asfaltoTeste, 0, 1);
-
-    sleep(1);
-    int listaArquivosTreinoGrama = salvaArquivos(gramaTreino, 1, 0);
-
-    sleep(1);
-    int listaArquivosTreinoAsfalto = salvaArquivos(asfaltoTreino, 1, 1);
+    int listaArquivosAsfalto = salvaArquivos(1);
 
     char arquivoNome[MAX];
     char conteudoLinha[256];
     int linha, codigoArquivo;
 
-    for (codigoArquivo = 2; codigoArquivo < 4; codigoArquivo++){
+    for (codigoArquivo = 0; codigoArquivo <= 1; codigoArquivo++){
 
-        for (linha = 0; linha < NUMERO_SORTEIO; linha++){
+        for (linha = 1; linha < 51; linha++){
 
             pegaLinhaNome(codigoArquivo, linha, arquivoNome, conteudoLinha);
             sleep(1);
