@@ -807,6 +807,7 @@ double *armazenaArquivoMatriz(char* filename){
         }
 
         CONTADOR_GRAMA++;
+        
     }
 
 
