@@ -132,9 +132,6 @@ int main(int argc, char *argv[]) {
 	for(int aux = 0; aux < 51; aux++) {
         
         entradas_grama[aux][536] = 1; 
-    }
-
-    for(int aux = 0; aux < 51;aux++) {
         
         entradas_asfalto[aux][536] = 0; 
     }
@@ -150,9 +147,6 @@ int main(int argc, char *argv[]) {
     for(int auxLinha = 0; auxLinha < numero_de_neuronios_ocultos; auxLinha++) {
         
         pesos_camada_oculta[auxLinha] = num_aleatorio(); 
-    }
-
-    for(int auxLinha = 0; auxLinha <numero_de_neuronios_ocultos; auxLinha++) {
         
         deslocamentos_camada_oculta[auxLinha] = num_aleatorio();   
     }
