@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
     for(int auxLinha = 1; auxLinha < 51; auxLinha ++) {
 
     	snprintf(string, MAX, "%s%d.txt", string_base_grama, auxLinha);
-        file = fopen(string,"w");
+        file = fopen(string,"r");
 
         for(int auxColuna = 0; auxColuna < 536; auxColuna ++) {
 
@@ -121,13 +121,15 @@ int main(int argc, char *argv[]) {
     for(int auxLinha = 1; auxLinha < 51; auxLinha ++) {
 
     	snprintf(string, MAX, "%s%d.txt", string_base_asfalto, auxLinha);
-        file = fopen(string,"w");
+        file = fopen(string,"r");
 
         for(int auxColuna = 0; auxColuna < 536; auxColuna ++) {
 
         	fscanf(file, "%lf%*c", &entradas_asfalto[auxLinha][auxColuna]);
         }
     }
+
+    fclose(file);
 
 	for(int aux = 0; aux < 51; aux++) {
         
