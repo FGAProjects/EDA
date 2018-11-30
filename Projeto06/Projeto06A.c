@@ -686,7 +686,7 @@ double *armazenaArquivoMatriz(char* filename){
 
     FILE *file_asfalto;
 
-    char string[50];
+    char string[30];
     char grass[6] = "grass";
     char asphalt[8] = "asphalt";
     char string_base_asfalto[20] = "Asfalto/asfalto_";
