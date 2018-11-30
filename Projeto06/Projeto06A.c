@@ -686,7 +686,7 @@ double *armazenaArquivoMatriz(char* filename){
 
     FILE *file_asfalto;
 
-    char string[50];
+    char string[30];
     char grass[6] = "grass";
     char asphalt[8] = "asphalt";
     char string_base_asfalto[20] = "Asfalto/asfalto_";
@@ -790,52 +790,30 @@ double *armazenaArquivoMatriz(char* filename){
     FILE *grama_file;
     FILE *asfalto_file;
 
-    // char string[50];
-    // char string_base_asfalto[20] = "Asfalto/asfalto_";
-    // char string_base_grama[20] = "Grama/grama_"; 
-
-    if(CONTADOR_GRAMA <=50){
-
-        snprintf(string, MAX, "%s%d.txt", string_base_grama, CONTADOR_GRAMA);
-        printf("%s\n", string);
-        grama_file = fopen(string,"w");
-
-        for(int aux = 0; aux < 536; aux ++) {
-
-            fprintf(asfalto_file,"%lf\n", VetorNormalizado[aux]);
-
-        }
-
-        CONTADOR_GRAMA++;
-        
-    }
-
-
-    else if(CONTADOR_ASFALTO <= 50){
+    if(CONTADOR_ASFALTO <= 50) {
 
         snprintf(string, MAX, "%s%d.txt", string_base_asfalto, CONTADOR_ASFALTO);
-        printf("%s\n", string);
         asfalto_file = fopen(string,"w");
-      
 
         for(int aux = 0; aux < 536; aux ++) {
 
             fprintf(asfalto_file, "%lf\n", VetorNormalizado[aux]);
-
         }
 
         CONTADOR_ASFALTO++;
-
     }
 
-    
+    else if(CONTADOR_GRAMA <= 50) {
 
-    
+        snprintf(string, MAX, "%s%d.txt", string_base_grama, CONTADOR_GRAMA);
+        grama_file = fopen(string,"w");
 
-    for(int aux = 0; aux < 536; aux ++) {
+        for(int aux = 0; aux < 536; aux ++) {
 
+            fprintf(grama_file,"%lf\n", VetorNormalizado[aux]);
+        }
 
-        printf("%lf\n", VetorNormalizado[aux]);
+        CONTADOR_GRAMA++;
     }
 
     return VetorNormalizado;
@@ -847,31 +825,6 @@ double *armazenaArquivoMatriz(char* filename){
 }
 
 int main () {
-
-	FILE *file;
-
-    // char string[50];
-    // char string_base_asfalto[20] = "Asfalto/asfalto_";
-    // char string_base_grama[20] = "Grama/grama_"; 
-
-    // //Asfalto
-    // for(int aux = 1; aux < 51; aux ++) {
-
-    //     snprintf(string, MAX, "%s%d.txt", string_base_asfalto, aux);
-    //     printf("%s\n", string);
-    //     file = fopen(string,"w");
-    //     fprintf(file, *armazenaArquivoMatriz);
-    // }
-
-    // //Grama
-    // for(int aux = 1; aux < 51; aux ++) {
-
-    //     snprintf(string, MAX, "%s%d.txt", string_base_grama, aux);
-    //     printf("%s\n", string);
-    //     file = fopen(string,"w");
-    // }
-
-    // fclose(file);
 
     sleep(1);
     printf("Criando arquivos...\n");
