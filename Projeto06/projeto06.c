@@ -794,8 +794,23 @@ double *armazenaArquivoMatriz(char* filename){
     // char string_base_asfalto[20] = "Asfalto/asfalto_";
     // char string_base_grama[20] = "Grama/grama_"; 
 
+    if(CONTADOR_GRAMA <=50){
 
-    if(CONTADOR_ASFALTO <= 50){
+        snprintf(string, MAX, "%s%d.txt", string_base_grama, CONTADOR_GRAMA);
+        printf("%s\n", string);
+        grama_file = fopen(string,"w");
+
+        for(int aux = 0; aux < 536; aux ++) {
+
+            fprintf(asfalto_file,"%lf\n", VetorNormalizado[aux]);
+
+        }
+
+        CONTADOR_GRAMA++;
+    }
+
+
+    else if(CONTADOR_ASFALTO <= 50){
 
         snprintf(string, MAX, "%s%d.txt", string_base_asfalto, CONTADOR_ASFALTO);
         printf("%s\n", string);
@@ -812,20 +827,7 @@ double *armazenaArquivoMatriz(char* filename){
 
     }
 
-    else if(CONTADOR_GRAMA <=50){
-
-        snprintf(string, MAX, "%s%d.txt", string_base_grama, CONTADOR_GRAMA);
-        printf("%s\n", string);
-        grama_file = fopen(string,"w");
-
-        for(int aux = 0; aux < 536; aux ++) {
-
-            fprintf(asfalto_file,"%lf\n", VetorNormalizado[aux]);
-
-        }
-
-        CONTADOR_GRAMA++;
-    }
+    
 
     
 
